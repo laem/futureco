@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
 import BikeRouteRésumé from './BikeRouteRésumé'
 import ClickedPoint from './ClickedPoint'
-import { ExplanationWrapper } from './ContentUI'
+import { ContentSection, ExplanationWrapper } from './ContentUI'
 import Explanations from './explanations.mdx'
 import { FeatureImage } from './FeatureImage'
 import GareInfo from './GareInfo'
@@ -86,9 +86,10 @@ export default function Content({
 			? getThumb(osmFeature.tags.wikimedia_commons, 500)
 			: wikidataPictureUrl)
 
+	const hasFeature = choice || osmFeature
+
 	const hasContent =
-		choice ||
-		osmFeature ||
+		hasFeature ||
 		zoneImages ||
 		panoramaxImages ||
 		!clickTipRead ||
@@ -97,15 +98,13 @@ export default function Content({
 
 	const bookmarkable = clickedPoint // later : choice || osmFeature
 
-	const hasFeature = choice || osmFeature
 	const hasDestination = choice || osmFeature || clickedPoint,
-		yo = console.log('bleu destination', clickedPoint),
 		destination = hasDestination && {
 			longitude: hasDestination.longitude,
 			latitude: hasDestination.latitude,
 		}
 
-	const showSearch = sideSheet || !hasFeature
+	const showSearch = !(hasFeature || itinerary.itineraryMode) // at first, on desktop, we kept the search bar considering we have room. But this divergence brings dev complexity
 
 	const minimumQuickSearchZoom = getMinimumQuickSearchZoom(!sideSheet)
 
@@ -196,20 +195,25 @@ export default function Content({
 					}}
 				/>
 			)}
+
 			<Itinerary
-				{...{ itinerary, bikeRouteProfile, setBikeRouteProfile, searchParams }}
+				{...{
+					itinerary,
+					bikeRouteProfile,
+					setBikeRouteProfile,
+					searchParams,
+					close: () => {
+						setSearchParams({ allez: undefined })
+						itinerary.setItineraryMode(false)
+					},
+				}}
 			/>
 
 			{styleChooser ? (
 				<StyleChooser {...{ setStyleChooser, style }} />
 			) : (
 				hasContent && (
-					<section
-						css={`
-							padding-top: 1.6rem;
-							position: relative;
-						`}
-					>
+					<ContentSection>
 						{(choice || osmFeature) && (
 							<ModalCloseButton
 								title="Fermer l'encart point d'intéret"
@@ -312,7 +316,7 @@ export default function Content({
 								</div>
 							)
 						)}
-					</section>
+					</ContentSection>
 				)
 			)}
 		</section>

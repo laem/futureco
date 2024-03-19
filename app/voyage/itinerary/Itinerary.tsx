@@ -1,4 +1,6 @@
 import BikeRouteRésumé from '../BikeRouteRésumé'
+import { ContentSection } from '../ContentUI'
+import { ModalCloseButton } from '../UI'
 import Transit from './Transit'
 
 export default function Itinerary({
@@ -6,6 +8,7 @@ export default function Itinerary({
 	bikeRouteProfile,
 	setBikeRouteProfile,
 	searchParams,
+	close,
 }) {
 	if (!itinerary.itineraryMode) return null
 	if (itinerary.itineraryMode && !itinerary.routes)
@@ -21,7 +24,8 @@ export default function Itinerary({
 		)
 
 	return (
-		<section>
+		<ContentSection>
+			<ModalCloseButton title="Fermer l'encart itinéraire" onClick={close} />
 			{(itinerary.routes.cycling || itinerary.routes.walking) && (
 				<BikeRouteRésumé
 					{...{
@@ -41,6 +45,6 @@ export default function Itinerary({
 				}}
 				searchParams={searchParams}
 			/>
-		</section>
+		</ContentSection>
 	)
 }
