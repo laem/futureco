@@ -2,29 +2,26 @@ import distance from '@turf/distance'
 import Image from 'next/image'
 import { useLocalStorage } from 'usehooks-ts'
 
+const pointHash = (point) => point.geometry.coordinates.join('|')
+
 export default function BookmarkButton({ clickedPoint }) {
 	const [bookmarks, setBookmarks] = useLocalStorage('bookmarks', [])
 	const feature = {
 		type: 'Feature',
 		geometry: {
 			type: 'Point',
-			coordinates: [clickedPoint.longitude, clickedPoint.latitude],
+			coordinates: [
+				clickedPoint.longitude.toFixed(4), // this is ~ 10 m precision, we don't want more than one bookmark every 10 meters
+				clickedPoint.latitude.toFixed(4),
+			],
 		},
 		properties: {},
 	}
-	const closeBookmark = bookmarks.find((point) => {
+
+	const same = bookmarks.find((point) => {
 		if (point.geometry.type !== 'Point') return false
-		const kilometers = distance(point, feature)
-		return kilometers < 0.1 && kilometers > 0.001
+		return pointHash(point) === pointHash(feature)
 	})
-	console.log('cyan close', closeBookmark)
-	if (closeBookmark) return null
-	const sameBookmark = bookmarks.find((point) => {
-		if (point.geometry.type !== 'Point') return false
-		const kilometers = distance(point, feature)
-		return kilometers < 0.001
-	})
-	console.log('cyan same', sameBookmark)
 	return (
 		<div
 			css={`
@@ -39,20 +36,19 @@ export default function BookmarkButton({ clickedPoint }) {
 		>
 			<button
 				onClick={() =>
-					sameBookmark
+					same
 						? setBookmarks(
 								bookmarks.filter((point) => {
 									if (point.geometry.type !== 'Point') return true
-									const kilometers = distance(point, feature)
-									return kilometers < 0.001
+									return pointHash(point) !== pointHash(feature)
 								})
 						  )
 						: setBookmarks([...bookmarks, feature])
 				}
 			>
 				<Image
-					src={sameBookmark ? '/star-full.svg' : '/star.svg'}
-					alt={sameBookmark ? 'Enlever des favoris' : 'Mettre en favori'}
+					src={same ? '/star-full.svg' : '/star.svg'}
+					alt={same ? 'Enlever des favoris' : 'Mettre en favori'}
 					width="10"
 					height="10"
 				/>

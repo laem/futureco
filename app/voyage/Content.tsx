@@ -94,7 +94,7 @@ export default function Content({
 		clickedPoint ||
 		searchParams.gare
 
-	const bookmarkable = choice || osmFeature || clickedPoint
+	const bookmarkable = clickedPoint // later : choice || osmFeature
 
 	const hasFeature = choice || osmFeature
 	const hasDestination = choice || osmFeature || clickedPoint,
