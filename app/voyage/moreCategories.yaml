@@ -56,7 +56,7 @@
     - scène
   query:
     - '[amenity=music_venue]'
-    - '[amenity=bar][live_music=yes]'
+    - '[amenity=bar|pub|cafe|restaurant|biergarten|fast_food][live_music=yes]'
     - '[amenity=theatre]["theatre:type"=concert_hall]'
     - '[amenity=nightclub]'
     - '[amenity=festival_grounds]'
