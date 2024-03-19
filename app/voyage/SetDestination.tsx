@@ -3,7 +3,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 export default function SetDestination({ destination, origin }) {
-	if (!origin) return null
 	const { latitude, longitude } = origin
 
 	const setSearchParams = useSetSearchParams()
