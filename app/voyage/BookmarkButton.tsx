@@ -2,9 +2,10 @@ import distance from '@turf/distance'
 import Image from 'next/image'
 import { useLocalStorage } from 'usehooks-ts'
 
-const pointHash = (point) => point.geometry.coordinates.join('|')
+export const pointHash = (point) => point.geometry.coordinates.join('|')
 
 export default function BookmarkButton({ clickedPoint }) {
+	console.log('cyan', clickedPoint)
 	const [bookmarks, setBookmarks] = useLocalStorage('bookmarks', [])
 	const feature = {
 		type: 'Feature',

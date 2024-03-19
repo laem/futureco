@@ -21,6 +21,7 @@ import useOgImageFetcher from './useOgImageFetcher'
 import useWikidata from './useWikidata'
 import { ZoneImages } from './ZoneImages'
 import BookmarkButton from './BookmarkButton'
+import Bookmarks from './Bookmarks'
 
 const getMinimumQuickSearchZoom = (mobile) => (mobile ? 10.5 : 12) // On a small screen, 70 %  of the tiles are not visible, hence this rule
 
@@ -184,6 +185,7 @@ export default function Content({
 			)}
 
 			{bookmarkable && <BookmarkButton clickedPoint={clickedPoint} />}
+			{searchParams.favoris === 'oui' && <Bookmarks />}
 			{searchParams.transports === 'oui' && (
 				<TransportMap
 					{...{
