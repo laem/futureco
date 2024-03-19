@@ -58,7 +58,7 @@ export default function ModalSheet(props) {
 			>
 				<Sheet.Container
 					css={`
-						background-color: var(--lightestColor) !important;
+						background-color: var(--lightestColor2) !important;
 					`}
 				>
 					<Sheet.Header
