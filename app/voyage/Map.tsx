@@ -34,6 +34,7 @@ import useSetTargetMarkerAndZoom from './effects/useSetTargetMarkerAndZoom'
 import useTransportStopData from './transport/useTransportStopData'
 import useDrawTransportsMap from './effects/useDrawTransportsMap'
 import useOverpassRequest from './effects/useOverpassRequest'
+import MapComponents from './MapComponents'
 
 export const defaultState = {
 	depuis: { inputValue: null, choice: false },
@@ -478,6 +479,7 @@ export default function Map({ searchParams }) {
 				}}
 			/>
 			{searchParams.transports === 'oui' && <CenteredCross />}
+			{map && <MapComponents map={map} />}
 			<div ref={mapContainerRef} />
 		</MapContainer>
 	)
