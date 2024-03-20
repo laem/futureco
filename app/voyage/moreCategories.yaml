@@ -114,7 +114,10 @@
   dictionary:
     - urgences
     - clinique
-  query: '[amenity=hospital]'
+  query: 
+    - '[amenity=hospital]'
+    - '[amenity=clinic]'
+    - '[healthcare=clinic]'
   icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/hospital.svg
 - name: médecin
   category: Santé
