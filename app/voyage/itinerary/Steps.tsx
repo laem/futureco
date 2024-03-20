@@ -5,32 +5,39 @@ const defaultItems = ['Rennes', 'Saint-Malo']
 export default function Steps({}) {
 	const [items, setItems] = useState(defaultItems)
 	return (
-		<Reorder.Group
-			axis="y"
-			values={items}
-			onReorder={setItems}
+		<section
 			css={`
-				width: 100%;
-				background: var(--lightestColor);
-				border-radius: 0.4rem;
-				padding: 0 0.3rem;
-				list-style-type: none;
-				li {
-					padding: 0.1rem 0;
-					border-bottom: 1px solid var(--lighterColor);
-					display: flex;
-					align-items: center;
-					justify-content: space-between;
-				}
-				li:last-child {
-					border-bottom: none;
-				}
+				margin: 0.6rem 0 2.6rem 0;
 			`}
 		>
-			{items.map((item, index) => (
-				<Item key={item} {...{ index, text: item }} />
-			))}
-		</Reorder.Group>
+			<Reorder.Group
+				axis="y"
+				values={items}
+				onReorder={setItems}
+				css={`
+					width: 100%;
+					background: var(--lightestColor);
+					border-radius: 0.4rem;
+					padding: 0 0.3rem;
+					list-style-type: none;
+					li {
+						padding: 0.1rem 0;
+						border-bottom: 1px solid var(--lighterColor);
+						background: var(--lightestColor);
+						display: flex;
+						align-items: center;
+						justify-content: space-between;
+					}
+					li:last-child {
+						border-bottom: none;
+					}
+				`}
+			>
+				{items.map((item, index) => (
+					<Item key={item} {...{ index, text: item }} />
+				))}
+			</Reorder.Group>
+		</section>
 	)
 }
 
@@ -39,7 +46,7 @@ const Item = ({ index, text }) => {
 	return (
 		<Reorder.Item value={text} dragListener={false} dragControls={controls}>
 			<Icon text={index === 0 ? 'A' : 'B'} /> {text}
-			<div onPointerDown={(e) => controls.start(e)}>
+			<div onPointerDown={(e) => controls.start(e)} className="reorder-handle">
 				<Dots />
 			</div>
 		</Reorder.Item>

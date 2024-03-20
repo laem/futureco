@@ -28,17 +28,17 @@ export default function Itinerary({
 				</p>
 			) : (
 				<div>
-					((itinerary.routes.cycling || itinerary.routes.walking) && (
-					<BikeRouteRésumé
-						{...{
-							cycling: itinerary.routes.cycling,
-							walking: itinerary.routes.walking,
-							data: itinerary.routes,
-							bikeRouteProfile,
-							setBikeRouteProfile,
-						}}
-					/>
-					))
+					{(itinerary.routes.cycling || itinerary.routes.walking) && (
+						<BikeRouteRésumé
+							{...{
+								cycling: itinerary.routes.cycling,
+								walking: itinerary.routes.walking,
+								data: itinerary.routes,
+								bikeRouteProfile,
+								setBikeRouteProfile,
+							}}
+						/>
+					)}
 					<Transit
 						data={{
 							...itinerary.routes.transit,
