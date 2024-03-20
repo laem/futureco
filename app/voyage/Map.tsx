@@ -61,9 +61,7 @@ export default function Map({ searchParams }) {
 	// This is a generic name herited from the /ferry and /avion pages, state means the from and to box's states.
 	// From is not currently used but will be.
 
-	const allez = searchParams.allez
-		? searchParams.allez.split('->')
-		: [defaultState.depuis, defaultState.vers]
+	const allez = searchParams.allez ? searchParams.allez.split('->') : null
 	const [state, setState] = useState(allez)
 	console.log('bleu state', state)
 	const map = useAddMap(styleUrl, setZoom, setBbox, mapContainerRef, setState)
@@ -96,7 +94,7 @@ export default function Map({ searchParams }) {
 		)
 	}
 
-	const vers = state.slice(-1)[0]
+	const vers = state?.slice(-1)[0]
 	const choice = vers && vers.choice
 	const target = useMemo(
 		() => choice && [choice.longitude, choice.latitude],
