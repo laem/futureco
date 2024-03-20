@@ -124,3 +124,7 @@ export const objectMapEntries = (obj, fn, filterBoolean) => {
 	const filteredEntries = filterBoolean ? entries.filter(Boolean) : entries
 	return Object.fromEntries(filteredEntries)
 }
+
+export function keys(entries: Array<[string, any]>) {
+	return entries.map(([key]) => key)
+}

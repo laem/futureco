@@ -1,3 +1,4 @@
+import { keys } from '@/components/utils/utils'
 import { useEffect, useMemo, useState } from 'react'
 import { gtfsServerUrl } from '../serverUrls'
 import useDrawTransport from './useDrawTransport'
@@ -10,7 +11,7 @@ export default function useDrawTransportsMap(
 	day,
 	bbox
 ) {
-	const [data, setData] = useState(null)
+	const [data, setData] = useState({ cache: [], active: [] })
 	useEffect(() => {
 		if (!map || !active) return
 
@@ -34,12 +35,20 @@ export default function useDrawTransportsMap(
 			const request = await fetch(url(format), { mode: 'cors' })
 			const json = await request.json()
 
-			if (format === 'geojson') return setData(json)
+			if (format === 'geojson')
+				return setData({ cache: json, active: keys(json) })
 
-			const agencies = data.map(([id]) => id),
-				newAgencies = json.filter((agency) => !agencies.includes(agency))
+			// The request was a prefetch request
+			const agenciesInCache = data.cache.map(([id]) => id),
+				newAgencies = json.filter((agency) => !agenciesInCache.includes(agency))
 
-			if (!newAgencies.length) return
+			if (!newAgencies.length) {
+				setData((data) => ({
+					...data,
+					active: json,
+				}))
+				return
+			}
 
 			const dataRequest = await fetch(
 				url('geojson') + `&selection=${newAgencies.join('|')}`,
@@ -48,27 +57,28 @@ export default function useDrawTransportsMap(
 
 			const dataJson = await dataRequest.json()
 
-			setData([...data, ...dataJson])
+			setData((data) => ({
+				cache: [...data.cache, ...dataJson],
+				active: keys(dataJson),
+			}))
 		}
 		doFetch()
 	}, [setData, bbox, active, day])
 
-	const drawData = useMemo(() => {
-		return {
-			routesGeojson: data?.map(([agencyId, { geojson }]) =>
-				agencyId == '1187' ? addDefaultColor(geojson) : geojson
-			),
-		}
+	const activeAgencies = data.active.map((agency) =>
+		data.cache.find(([id]) => id === agency)
+	)
+
+	const drawEntries = useMemo(() => {
+		return activeAgencies.map(([agencyId, { geojson }]) => [
+			agencyId,
+			agencyId == '1187' ? addDefaultColor(geojson) : geojson,
+		])
 	}, [data])
 
-	useDrawTransport(
-		map,
-		drawData,
-		safeStyleKey,
-		'transitMap' + (data || []).map(([id]) => id) + day, // TODO When the selection of agencies will change, the map will redraw, which is a problem : only new agencies should be added
-		day
-	)
-	return data
+	const sourcePrefix = 'gtfs-agency-'
+	useDrawTransport(map, drawEntries, safeStyleKey, sourcePrefix)
+	return activeAgencies
 }
 
 const addDefaultColor = (featureCollection) => {
