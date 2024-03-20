@@ -3,17 +3,16 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 export default function SetDestination({ destination, origin }) {
-	const { latitude, longitude } = origin
-
 	const setSearchParams = useSetSearchParams()
 
-	const href = setSearchParams(
-		{
-			allez: `${longitude}|${latitude};${destination.longitude}|${destination.latitude}`,
-		},
-		true,
-		false
-	)
+	const destinationPart = `${destination.longitude}|${destination.latitude}`
+	const search = {
+		allez: origin
+			? `${origin.longitude}|${origin.latitude}->${destinationPart}`
+			: `->${destinationPart}`,
+	}
+
+	const href = setSearchParams(search, true, false)
 
 	return (
 		<Link href={href}>

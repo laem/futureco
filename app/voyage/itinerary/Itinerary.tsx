@@ -10,13 +10,14 @@ export default function Itinerary({
 	setBikeRouteProfile,
 	searchParams,
 	close,
+	state,
 }) {
 	if (!itinerary.itineraryMode) return null
 
 	return (
 		<ContentSection>
 			<ModalCloseButton title="Fermer l'encart itinéraire" onClick={close} />
-			<Steps recherche={searchParams.recherche} />
+			<Steps recherche={searchParams.recherche} state={state} />
 			{!itinerary.routes ? (
 				<p
 					css={`

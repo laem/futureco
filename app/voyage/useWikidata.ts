@@ -3,12 +3,13 @@ import getCityData, { extractFileName, getThumb } from '@/components/wikidata'
 
 export default function useWikidata(osmFeature, state) {
 	const [wikidata, setWikidata] = useState(null)
+	const vers = state.slice(-1)[0]
 	useEffect(() => {
 		if (!osmFeature) return // We're waiting for osmFeature first, since it can contain the wikidata tag, way more precise than guessing the wikidata from the name
 		if (osmFeature.tags?.wikidata || osmFeature.tags?.wikimedia_commons) return
-		if (!state.vers.choice) return
+		if (!vers.choice) return
 
-		getCityData(state.vers.choice.name, false).then((json) => {
+		getCityData(vers.choice.name, false).then((json) => {
 			const firstResult = json?.results?.bindings[0],
 				wikimediaUrl = firstResult?.pic?.value
 
@@ -17,7 +18,7 @@ export default function useWikidata(osmFeature, state) {
 			const pictureUrl = getThumb(pictureName, 500)
 			setWikidata({ pictureName, pictureUrl })
 		})
-	}, [state.vers, osmFeature])
+	}, [vers, osmFeature])
 
 	useEffect(() => {
 		if (!osmFeature?.tags?.wikidata) return

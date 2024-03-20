@@ -3,8 +3,8 @@ import { Reorder, useDragControls } from 'framer-motion'
 import { useState } from 'react'
 import Image from 'next/image'
 
-const defaultItems = ['Rennes', 'Saint-Malo']
-export default function Steps({ recherche }) {
+const defaultItems = ['depuis', 'vers']
+export default function Steps({ recherche, state }) {
 	const [items, setItems] = useState(defaultItems)
 
 	const setSearchParams = useSetSearchParams()
@@ -39,12 +39,13 @@ export default function Steps({ recherche }) {
 					}
 				`}
 			>
-				{items.map((item, index) => (
+				{items.map((stepKey, index) => (
 					<Item
-						key={item}
+						key={stepKey}
 						{...{
 							index,
-							text: item,
+							stepKey,
+							stepValue: state[stepKey],
 							setSearching,
 							beingSearched: recherche == index,
 						}}
@@ -55,11 +56,11 @@ export default function Steps({ recherche }) {
 	)
 }
 
-const Item = ({ index, text, setSearching, beingSearched }) => {
+const Item = ({ index, stepKey, stepValue, setSearching, beingSearched }) => {
 	const controls = useDragControls()
 	return (
 		<Reorder.Item
-			value={text}
+			value={stepKey}
 			dragListener={false}
 			dragControls={controls}
 			css={`
@@ -80,7 +81,7 @@ const Item = ({ index, text, setSearching, beingSearched }) => {
 				<span onClick={() => setSearching(index)}>
 					{beingSearched
 						? `Choisissez une ${index == 0 ? 'origine' : 'destination'}`
-						: text}
+						: stepValue.inputValue}
 				</span>
 				{beingSearched && (
 					<span>

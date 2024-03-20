@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { encodePlace } from './utils'
 import Logo from '@/public/voyage.svg'
 import Image from 'next/image'
+import { replaceArrayIndex } from '@/components/utils/utils'
 
 export default function PlaceSearch({
 	state,
@@ -15,33 +16,39 @@ export default function PlaceSearch({
 	zoom,
 	setSearchParams,
 	searchParams,
+	autoFocus = false,
+	stepIndex,
 }) {
+	if (!stepIndex) throw new Error('Step index necessary')
 	const [localSearch, setLocalSearch] = useState(true)
 	const urlSearchQuery = searchParams.q
-	const { vers } = state
+	const vers = state.slice(-1)[0]
 	const value = vers.inputValue
 	console.log('violet', value)
 
 	const onInputChange =
-		(whichInput, localSearch = false) =>
+		(stepIndex = -1, localSearch = false) =>
 		(v) => {
-			const oldState = state[whichInput]
-			setState({
-				...state,
-				[whichInput]: {
-					...(v == null ? { ...oldState, results: null } : oldState),
-					inputValue: v,
-				},
-				validated: false,
-			})
+			const oldState = state[stepIndex]
+			setState(
+				replaceArrayIndex(
+					state,
+					stepIndex,
+					{
+						...(v == null ? { ...oldState, results: null } : oldState),
+						inputValue: v,
+					}
+					//validated: false, // TODO was important or not ? could be stored in each state array entries and calculated ?
+				)
+			)
 			if (v?.length > 2) {
 				const hash = window.location.hash,
 					local = hash.split('/').slice(1, 3)
 
-				fetchPhoton(v, setState, whichInput, localSearch && local, zoom)
+				fetchPhoton(v, setState, stepIndex, localSearch && local, zoom)
 			}
 		}
-	const onDestinationChange = onInputChange('vers', localSearch)
+	const onDestinationChange = onInputChange(stepIndex, localSearch)
 
 	useEffect(() => {
 		if (!urlSearchQuery || value != null) return
@@ -79,6 +86,7 @@ export default function PlaceSearch({
 					<input
 						type="text"
 						value={value || ''}
+						autoFocus={autoFocus}
 						onClick={(e) => {
 							setSnap(0)
 							e.preventDefault()
@@ -118,8 +126,7 @@ export default function PlaceSearch({
 			</div>
 			{vers.results &&
 				vers.inputValue !== '' &&
-				(!state.vers.choice ||
-					state.vers.choice.inputValue !== vers.inputValue) && (
+				(!vers.choice || vers.choice.inputValue !== vers.inputValue) && (
 					<div
 						css={`
 							ul {
@@ -138,10 +145,10 @@ export default function PlaceSearch({
 						<GeoInputOptions
 							{...{
 								whichInput: 'vers',
-								data: state['vers'],
+								data: vers,
 								updateState: (newData) => {
 									setSnap(1)
-									setState((state) => ({ ...state, vers: newData }))
+									setState(replaceArrayIndex(state, -1, newData))
 
 									console.log('ici', newData)
 									const { osmId, featureType } = newData.choice
@@ -174,7 +181,10 @@ export default function PlaceSearch({
 								defaultChecked={localSearch}
 								onClick={() => {
 									setLocalSearch(!localSearch)
-									onInputChange('vers', !localSearch)(vers.inputValue)
+									onInputChange(
+										stepIndex,
+										!localSearch
+									)(state.slice(-1)[0].inputValue)
 								}}
 							/>
 							<span style={css``}>Rechercher ici</span>

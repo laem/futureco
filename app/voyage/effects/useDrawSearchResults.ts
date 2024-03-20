@@ -6,7 +6,7 @@ export default function useDrawSearchResults(map, state, setOsmFeature) {
 	// Photon search results are not full OSM objectfs, lacking tags, so lacking
 	// opening times for instance
 	const [features, setFeatures] = useState([])
-	const { results } = state.vers
+	const { results } = state.slice(-1)[0]
 	useEffect(() => {
 		if (!map) return
 

@@ -124,3 +124,14 @@ export const objectMapEntries = (obj, fn, filterBoolean) => {
 	const filteredEntries = filterBoolean ? entries.filter(Boolean) : entries
 	return Object.fromEntries(filteredEntries)
 }
+
+export const replaceArrayIndex = (array, index, value) =>
+	array.map((v, i) =>
+		index < 0
+			? array.lenth - i === index
+				? value
+				: v
+			: i === index
+			? value
+			: v
+	)

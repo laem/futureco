@@ -41,6 +41,7 @@ export const defaultState = {
 	vers: { inputValue: null, choice: false },
 	validated: false,
 }
+
 export default function Map({ searchParams }) {
 	const mapContainerRef = useRef(null)
 	const [zoom, setZoom] = useState(defaultZoom)
@@ -58,12 +59,13 @@ export default function Map({ searchParams }) {
 
 	// This is a generic name herited from the /ferry and /avion pages, state means the from and to box's states.
 	// From is not currently used but will be.
-	const [state, setState] = useState(defaultState)
+
+	const allez = searchParams.allez
+		? searchParams.allez.split('->')
+		: [defaultState.depuis, defaultState.vers]
+	const [state, setState] = useState(allez)
 	console.log('bleu state', state)
 	const map = useAddMap(styleUrl, setZoom, setBbox, mapContainerRef, setState)
-
-	const resetInput = (which) =>
-		setState({ ...state, [which]: defaultState[which] })
 
 	const [latLngClicked, setLatLngClicked] = useState(null)
 	const [bikeRouteProfile, setBikeRouteProfile] = useState('safety')
@@ -71,7 +73,6 @@ export default function Map({ searchParams }) {
 	const [itineraryMode, setItineraryMode] = useState(false)
 	const [styleChooser, setStyleChooser] = useState(false)
 
-	const allez = searchParams.allez
 	useItineraryFromUrl(allez, setItineraryMode, map)
 
 	const setSearchParams = useSetSearchParams()
@@ -94,17 +95,13 @@ export default function Map({ searchParams }) {
 		)
 	}
 
-	const choice = state.vers?.choice
+	const choice = state.slice(-1)[0]
 	const target = useMemo(
 		() => choice && [choice.longitude, choice.latitude],
 		[choice]
 	)
 
-	const [osmFeature, setOsmFeature] = useOsmRequest(
-		map,
-		lieu,
-		state.vers.choice
-	)
+	const [osmFeature, setOsmFeature] = useOsmRequest(map, lieu, choice)
 
 	const transportStopData = useTransportStopData(osmFeature)
 
@@ -198,9 +195,10 @@ export default function Map({ searchParams }) {
 	const [features] = useOverpassRequest(simpleArrayBbox, category)
 
 	const onSearchResultClick = (feature) => {
-		resetInput('vers')
+		setState([...state.slice(0, -1), defaultState.vers])
 		setOsmFeature(feature)
 	}
+
 	useDrawQuickSearchFeatures(
 		map,
 		features,
@@ -387,6 +385,9 @@ export default function Map({ searchParams }) {
 
 	useHoverOnMapFeatures(map)
 
+	/* Transform this to handle the last itinery point if alone (just a POI url),
+	 * but also to add markers to all the steps of the itinerary */
+	/*
 	useSetTargetMarkerAndZoom(
 		map,
 		target,
@@ -396,6 +397,7 @@ export default function Map({ searchParams }) {
 		setLatLngClicked,
 		zoom
 	)
+	*/
 
 	const lesGaresProches =
 		target && gares && sortGares(gares, target).slice(0, 30)

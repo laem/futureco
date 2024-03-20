@@ -150,6 +150,7 @@ export default function Content({
 								setSearchParams,
 								searchParams,
 								whichInput: recherche == 0 ? 'depuis' : 'vers',
+								autoFocus: recherche != null,
 							}}
 						/>
 					)}
@@ -210,6 +211,7 @@ export default function Content({
 						setSearchParams({ allez: undefined })
 						itinerary.setItineraryMode(false)
 					},
+					state,
 				}}
 			/>
 
