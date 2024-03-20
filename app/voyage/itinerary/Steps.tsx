@@ -45,7 +45,15 @@ const Item = ({ index, text }) => {
 	const controls = useDragControls()
 	return (
 		<Reorder.Item value={text} dragListener={false} dragControls={controls}>
-			<Icon text={index === 0 ? 'A' : 'B'} /> {text}
+			<div
+				css={`
+					display: flex;
+					justify-content: start;
+					align-items: center;
+				`}
+			>
+				<Icon text={index === 0 ? 'A' : 'B'} /> {text}
+			</div>
 			<div onPointerDown={(e) => controls.start(e)} className="reorder-handle">
 				<Dots />
 			</div>
