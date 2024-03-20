@@ -86,6 +86,8 @@ export default function Content({
 			? getThumb(osmFeature.tags.wikimedia_commons, 500)
 			: wikidataPictureUrl)
 
+	const { recherche } = searchParams
+
 	const hasFeature = choice || osmFeature
 
 	const hasContent =
@@ -104,7 +106,8 @@ export default function Content({
 			latitude: hasDestination.latitude,
 		}
 
-	const showSearch = !(hasFeature || itinerary.itineraryMode) // at first, on desktop, we kept the search bar considering we have room. But this divergence brings dev complexity
+	const showSearch =
+		recherche != null || !(hasFeature || itinerary.itineraryMode) // at first, on desktop, we kept the search bar considering we have room. But this divergence brings dev complexity
 
 	const minimumQuickSearchZoom = getMinimumQuickSearchZoom(!sideSheet)
 
@@ -146,6 +149,7 @@ export default function Content({
 								zoom,
 								setSearchParams,
 								searchParams,
+								whichInput: recherche == 0 ? 'depuis' : 'vers',
 							}}
 						/>
 					)}

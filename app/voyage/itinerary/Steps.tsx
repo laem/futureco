@@ -1,9 +1,15 @@
+import useSetSearchParams from '@/components/useSetSearchParams'
 import { Reorder, useDragControls } from 'framer-motion'
 import { useState } from 'react'
+import Image from 'next/image'
 
 const defaultItems = ['Rennes', 'Saint-Malo']
-export default function Steps({}) {
+export default function Steps({ recherche }) {
 	const [items, setItems] = useState(defaultItems)
+
+	const setSearchParams = useSetSearchParams()
+	const setSearching = (index) => setSearchParams({ recherche: index })
+
 	return (
 		<section
 			css={`
@@ -18,10 +24,10 @@ export default function Steps({}) {
 					width: 100%;
 					background: var(--lightestColor);
 					border-radius: 0.4rem;
-					padding: 0 0.3rem;
+					padding: 0.2rem 0.3rem;
 					list-style-type: none;
 					li {
-						padding: 0.1rem 0;
+						padding: 0.1rem 0.2rem;
 						border-bottom: 1px solid var(--lighterColor);
 						background: var(--lightestColor);
 						display: flex;
@@ -34,17 +40,35 @@ export default function Steps({}) {
 				`}
 			>
 				{items.map((item, index) => (
-					<Item key={item} {...{ index, text: item }} />
+					<Item
+						key={item}
+						{...{
+							index,
+							text: item,
+							setSearching,
+							beingSearched: recherche == index,
+						}}
+					/>
 				))}
 			</Reorder.Group>
 		</section>
 	)
 }
 
-const Item = ({ index, text }) => {
+const Item = ({ index, text, setSearching, beingSearched }) => {
 	const controls = useDragControls()
 	return (
-		<Reorder.Item value={text} dragListener={false} dragControls={controls}>
+		<Reorder.Item
+			value={text}
+			dragListener={false}
+			dragControls={controls}
+			css={`
+				${beingSearched &&
+				`
+				background: yellow !important;
+				`}
+			`}
+		>
 			<div
 				css={`
 					display: flex;
@@ -52,7 +76,30 @@ const Item = ({ index, text }) => {
 					align-items: center;
 				`}
 			>
-				<Icon text={index === 0 ? 'A' : 'B'} /> {text}
+				<Icon text={index === 0 ? 'A' : 'B'} />{' '}
+				<span onClick={() => setSearching(index)}>
+					{beingSearched
+						? `Choisissez une ${index == 0 ? 'origine' : 'destination'}`
+						: text}
+				</span>
+				{beingSearched && (
+					<span>
+						{' '}
+						<button onClick={() => setSearching(undefined)}>
+							<Image
+								src="/close.svg"
+								width="10"
+								height="10"
+								alt="Icône croix"
+								css={`
+									margin-left: 0.4rem;
+									filter: invert(1);
+								`}
+							/>{' '}
+							annuler
+						</button>
+					</span>
+				)}
 			</div>
 			<div onPointerDown={(e) => controls.start(e)} className="reorder-handle">
 				<Dots />
