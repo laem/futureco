@@ -35,6 +35,7 @@ import useTransportStopData from './transport/useTransportStopData'
 import useDrawTransportsMap from './effects/useDrawTransportsMap'
 import useOverpassRequest from './effects/useOverpassRequest'
 import MapComponents from './MapComponents'
+import { replaceArrayIndex } from '@/components/utils/utils'
 
 export const defaultState = {
 	depuis: { inputValue: null, choice: false },
@@ -95,15 +96,16 @@ export default function Map({ searchParams }) {
 		)
 	}
 
-	const choice = state.slice(-1)[0]
+	const vers = state.slice(-1)[0]
+	const choice = vers && vers.choice
 	const target = useMemo(
 		() => choice && [choice.longitude, choice.latitude],
 		[choice]
 	)
 
-	const [osmFeature, setOsmFeature] = useOsmRequest(map, lieu, choice)
+	useOsmRequest(map, state, setState, choice)
 
-	const transportStopData = useTransportStopData(osmFeature)
+	const transportStopData = useTransportStopData(vers.osmFeature)
 
 	useEffect(() => {
 		if (!transportStopData || !transportStopData.routesGeojson) return
@@ -278,6 +280,9 @@ export default function Map({ searchParams }) {
 	const [clickedPoint, resetClickedPoint] = useRightClick(map)
 	console.log('jaune point', clickedPoint)
 
+	// This hook lets the user click on the map to find OSM entities
+	// It also draws a polygon to show the search area for pictures
+	// (not obvious for the user though)
 	useEffect(() => {
 		const onClick = async (e) => {
 			console.log('click event', e)
@@ -360,12 +365,24 @@ export default function Map({ searchParams }) {
 			if (element) {
 				console.log('reset OSMfeature after click on POI')
 				console.log('will set lieu searchparam after click on POI')
-				setOsmFeature({
-					...element,
-					longitude: e.lngLat.lng,
-					latitude: e.lngLat.lat,
+				const { lng: longitude, lat: latitude } = e.lngLat
+				replaceArrayIndex(
+					state,
+					-1,
+					{
+						osmFeature: {
+							...element,
+							longitude,
+							latitude,
+						},
+					},
+					true
+				)
+				// We store longitude and latitude in order to, in some cases, avoid a
+				// subsequent fetch request on link share
+				setSearchParams({
+					allez: `${encodePlace(realFeatureType, id)}|${longitude}|${latitude}`,
 				})
-				setSearchParams({ lieu: encodePlace(realFeatureType, id) })
 				console.log('sill set OSMFeature', element)
 				// wait for the searchParam update to proceed
 				const uic = element.tags?.uic_ref,
@@ -445,9 +462,7 @@ export default function Map({ searchParams }) {
 						state,
 						clickedGare,
 						clickGare,
-						setOsmFeature,
 						bikeRoute,
-						osmFeature,
 						latLngClicked,
 						setLatLngClicked,
 						setBikeRouteProfile,

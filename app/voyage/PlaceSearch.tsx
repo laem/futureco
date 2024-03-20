@@ -151,10 +151,14 @@ export default function PlaceSearch({
 									setState(replaceArrayIndex(state, -1, newData))
 
 									console.log('ici', newData)
-									const { osmId, featureType } = newData.choice
+									const { osmId, featureType, longitude, latitude } =
+										newData.choice
 									if (osmId && featureType)
 										setSearchParams({
-											lieu: encodePlace(featureType, osmId),
+											allez: `${encodePlace(
+												featureType,
+												osmId
+											)}|${longitude}|${latitude}`,
 											q: undefined,
 										})
 								},

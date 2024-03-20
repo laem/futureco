@@ -4,13 +4,12 @@ import { useEffect, useState } from 'react'
 import { osmRequest } from '../osmRequest'
 import { decodePlace } from '../utils'
 
-export default function useOsmRequest(map, lieu, choice) {
-	const [osmFeature, setOsmFeature] = useState(null)
-
-	const place = lieu,
-		[featureType, featureId] = place
-			? decodePlace(place)
-			: extractOsmFeature(choice)
+// TODO this function will enrich the array of steps stored in the URL
+// with an osm object if relevant and if it's not been done already
+export default function useOsmRequest(map, state, choice) {
+	const [featureType, featureId] = place
+		? decodePlace(place)
+		: extractOsmFeature(choice)
 	useEffect(() => {
 		if (!map || !featureType || !featureId) return
 		if (osmFeature && osmFeature.id == featureId) return

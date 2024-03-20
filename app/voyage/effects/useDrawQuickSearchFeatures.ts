@@ -161,6 +161,7 @@ export default function useDrawQuickSearchFeatures(
 
 				map.on('click', baseId + 'points', async (e) => {
 					const feature = e.features[0]
+					const { lng: longitude, lat: latitude } = e.lngLat
 					const properties = feature.properties,
 						tagsRaw = properties.tags
 					console.log('quickSearchOSMfeatureClick', feature)
@@ -168,7 +169,10 @@ export default function useDrawQuickSearchFeatures(
 						typeof tagsRaw === 'string' ? JSON.parse(tagsRaw) : tagsRaw
 
 					setSearchParams({
-						lieu: encodePlace(properties.featureType, properties.id),
+						allez: `${encodePlace(
+							properties.featureType,
+							properties.id
+						)}|${longitude}|${latitude}`,
 					})
 
 					const osmFeature = { ...properties, tags }

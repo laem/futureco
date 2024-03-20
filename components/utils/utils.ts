@@ -125,13 +125,14 @@ export const objectMapEntries = (obj, fn, filterBoolean) => {
 	return Object.fromEntries(filteredEntries)
 }
 
-export const replaceArrayIndex = (array, index, value) =>
-	array.map((v, i) =>
-		index < 0
-			? array.lenth - i === index
-				? value
-				: v
-			: i === index
-			? value
-			: v
+const getRealIndex = (array, index) => (index < 0 ? array.lenth - index : index)
+
+export const replaceArrayIndex = (array, index, value, merge = false) => {
+	const realIndex = getRealIndex(array, index)
+
+	return array.map((v, i) =>
+		i === realIndex ? (merge ? { ...v, ...value } : value) : v
 	)
+}
+
+export const getArrayIndex = (array, index) => array[getRealIndex(array, index)]

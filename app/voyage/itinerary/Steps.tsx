@@ -2,8 +2,9 @@ import useSetSearchParams from '@/components/useSetSearchParams'
 import { Reorder, useDragControls } from 'framer-motion'
 import { useState } from 'react'
 import Image from 'next/image'
+import { getArrayIndex } from '@/components/utils/utils'
 
-const defaultItems = ['depuis', 'vers']
+const defaultItems = [1, 2]
 export default function Steps({ recherche, state }) {
 	const [items, setItems] = useState(defaultItems)
 
@@ -45,7 +46,7 @@ export default function Steps({ recherche, state }) {
 						{...{
 							index,
 							stepKey,
-							stepValue: state[stepKey],
+							stepValue: getArrayIndex(state, stepKey),
 							setSearching,
 							beingSearched: recherche == index,
 						}}

@@ -151,6 +151,7 @@ export default function Content({
 								searchParams,
 								whichInput: recherche == 0 ? 'depuis' : 'vers',
 								autoFocus: recherche != null,
+								stepIndex: -1,
 							}}
 						/>
 					)}
@@ -225,7 +226,7 @@ export default function Content({
 								title="Fermer l'encart point d'intéret"
 								onClick={() => {
 									console.log('will yo')
-									setSearchParams({ lieu: undefined })
+									setSearchParams({ allez: undefined })
 									setTimeout(() => setOsmFeature(null), 300)
 									setLatLngClicked(null)
 									resetZoneImages()
