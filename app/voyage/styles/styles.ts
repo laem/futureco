@@ -12,6 +12,11 @@ export const styles = {
 		name: 'Base',
 		emoji: '🗺️',
 	},
+	protomaps: {
+		url: `https://api.protomaps.com/styles/v2/light.json?key=8df307109ae3eabc`,
+		name: 'Protomaps',
+		emoji: '⚡️',
+	},
 	satellite: {
 		url: maptilerUrl('satellite'),
 		name: 'Satellite',
