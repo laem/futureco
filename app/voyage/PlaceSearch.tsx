@@ -22,7 +22,7 @@ export default function PlaceSearch({
 	if (!stepIndex) throw new Error('Step index necessary')
 	const [localSearch, setLocalSearch] = useState(true)
 	const urlSearchQuery = searchParams.q
-	const vers = state.slice(-1)[0]
+	const vers = state.slice(-1)[0] || { results: [], inputValue: '' }
 	const value = vers.inputValue
 	console.log('violet', value)
 

@@ -82,7 +82,7 @@ const Item = ({ index, stepKey, stepValue, setSearching, beingSearched }) => {
 				<span onClick={() => setSearching(index)}>
 					{beingSearched
 						? `Choisissez une ${index == 0 ? 'origine' : 'destination'}`
-						: stepValue.inputValue}
+						: stepValue?.inputValue || 'plop'}
 				</span>
 				{beingSearched && (
 					<span>

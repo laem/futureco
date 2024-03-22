@@ -58,11 +58,13 @@ export default function Map({ searchParams }) {
 		style = styles[styleKey],
 		styleUrl = styles[styleKey].url
 
-	// This is a generic name herited from the /ferry and /avion pages, state means the from and to box's states.
-	// From is not currently used but will be.
+	// In this query param is stored an array of points. If only one, it's just a
+	// place focused on.
+	const [state, setState] = useState([])
 
-	const allez = searchParams.allez ? searchParams.allez.split('->') : null
-	const [state, setState] = useState(allez)
+	const allez = useMemo(() => {
+		return searchParams.allez ? searchParams.allez.split('->') : []
+	}, [searchParams.allez])
 	console.log('bleu state', state)
 	const map = useAddMap(styleUrl, setZoom, setBbox, mapContainerRef, setState)
 
@@ -94,6 +96,7 @@ export default function Map({ searchParams }) {
 		)
 	}
 
+	console.log('indigo', state)
 	const vers = state?.slice(-1)[0]
 	const choice = vers && vers.choice
 	const target = useMemo(
@@ -101,9 +104,9 @@ export default function Map({ searchParams }) {
 		[choice]
 	)
 
-	useOsmRequest(map, state, setState, choice)
+	useOsmRequest(allez, state, setState)
 
-	const transportStopData = useTransportStopData(vers.osmFeature)
+	const transportStopData = useTransportStopData(vers?.osmFeature)
 
 	useEffect(() => {
 		if (!transportStopData || !transportStopData.routesGeojson) return
@@ -374,12 +377,15 @@ export default function Map({ searchParams }) {
 							latitude,
 						},
 					},
-					true
+					'merge'
 				)
 				// We store longitude and latitude in order to, in some cases, avoid a
 				// subsequent fetch request on link share
 				setSearchParams({
-					allez: `${encodePlace(realFeatureType, id)}|${longitude}|${latitude}`,
+					allez: `opéra de rennes|${encodePlace(
+						realFeatureType,
+						id
+					)}|${longitude}|${latitude}`,
 				})
 				console.log('sill set OSMFeature', element)
 				// wait for the searchParam update to proceed

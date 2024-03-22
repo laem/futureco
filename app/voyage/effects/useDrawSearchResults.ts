@@ -3,6 +3,8 @@ import { osmRequest } from '../osmRequest'
 import useDrawQuickSearchFeatures from './useDrawQuickSearchFeatures'
 
 export default function useDrawSearchResults(map, state, setOsmFeature) {
+	//TODO
+	return
 	// Photon search results are not full OSM objectfs, lacking tags, so lacking
 	// opening times for instance
 	const [features, setFeatures] = useState([])
