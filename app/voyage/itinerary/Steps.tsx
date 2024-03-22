@@ -4,8 +4,8 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { getArrayIndex } from '@/components/utils/utils'
 
-export default function Steps({ recherche, state }) {
-	const [items, setItems] = useState(state)
+export default function Steps({ recherche, state, allez }) {
+	const [steps, setSteps] = useState(state)
 
 	const setSearchParams = useSetSearchParams()
 
@@ -19,7 +19,7 @@ export default function Steps({ recherche, state }) {
 		>
 			<Reorder.Group
 				axis="y"
-				values={items}
+				values={steps}
 				onReorder={(newItems) => console.log('indigo', newItems)}
 				css={`
 					width: 100%;
@@ -40,13 +40,12 @@ export default function Steps({ recherche, state }) {
 					}
 				`}
 			>
-				{items.map((stepKey, index) => (
+				{steps.map((step, index) => (
 					<Item
-						key={stepKey}
+						key={step.key}
 						{...{
 							index,
-							stepKey,
-							stepValue: getArrayIndex(state, stepKey),
+							step,
 							setSearching,
 							beingSearched: recherche == index,
 						}}
@@ -57,11 +56,11 @@ export default function Steps({ recherche, state }) {
 	)
 }
 
-const Item = ({ index, stepKey, stepValue, setSearching, beingSearched }) => {
+const Item = ({ index, step, setSearching, beingSearched }) => {
 	const controls = useDragControls()
 	return (
 		<Reorder.Item
-			value={stepKey}
+			value={step.key}
 			dragListener={false}
 			dragControls={controls}
 			css={`
@@ -82,7 +81,7 @@ const Item = ({ index, stepKey, stepValue, setSearching, beingSearched }) => {
 				<span onClick={() => setSearching(index)}>
 					{beingSearched
 						? `Choisissez une ${index == 0 ? 'origine' : 'destination'}`
-						: stepValue?.inputValue || 'plop'}
+						: step?.name || 'plop'}
 				</span>
 				{beingSearched && (
 					<span>

@@ -350,6 +350,7 @@ export default function Map({ searchParams }) {
 			if (element) {
 				console.log('reset OSMfeature after click on POI')
 				console.log('will set lieu searchparam after click on POI')
+				console.log('indigo element', element)
 				const { lng: longitude, lat: latitude } = e.lngLat
 				replaceArrayIndex(
 					state,
@@ -366,7 +367,7 @@ export default function Map({ searchParams }) {
 				// We store longitude and latitude in order to, in some cases, avoid a
 				// subsequent fetch request on link share
 				setSearchParams({
-					allez: `opéra de rennes|${encodePlace(
+					allez: `${element.tags?.name || ''}|${encodePlace(
 						realFeatureType,
 						id
 					)}|${longitude}|${latitude}`,

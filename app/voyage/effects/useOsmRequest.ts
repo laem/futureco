@@ -95,7 +95,7 @@ export default function useOsmRequest(allez, state, setState) {
 			*/
 				}
 				const osmFeature = await request()
-				return { osmCode, longitude, latitude, name, osmFeature }
+				return { osmCode, longitude, latitude, name, osmFeature, key: point }
 			})
 			const newState = await Promise.all(newPoints)
 			setState(newState)
