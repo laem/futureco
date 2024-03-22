@@ -15,7 +15,7 @@ export default function useAddMap(
 	setZoom,
 	setBbox,
 	mapContainerRef,
-	setState
+	setGeolocation
 ) {
 	const [map, setMap] = useState(null)
 	const mobile = useMediaQuery('(max-width: 800px)')
@@ -50,9 +50,7 @@ export default function useAddMap(
 
 		geolocate.on('geolocate', function (e) {
 			console.log('bleu ', e.coords)
-			setState((state) =>
-				replaceArrayIndex(state, -1, { geolocated: e.coords }, 'merge')
-			)
+			setGeolocation((state) => e.coords)
 		})
 
 		newMap.on('style.load', function () {

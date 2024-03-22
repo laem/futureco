@@ -64,7 +64,15 @@ export default function Map({ searchParams }) {
 	const allez = useMemo(() => {
 		return searchParams.allez ? searchParams.allez.split('->') : []
 	}, [searchParams.allez])
-	const map = useAddMap(styleUrl, setZoom, setBbox, mapContainerRef, setState)
+
+	const [geolocation, setGeolocation] = useState(null)
+	const map = useAddMap(
+		styleUrl,
+		setZoom,
+		setBbox,
+		mapContainerRef,
+		setGeolocation
+	)
 
 	const [latLngClicked, setLatLngClicked] = useState(null)
 	const [bikeRouteProfile, setBikeRouteProfile] = useState('safety')
@@ -460,6 +468,7 @@ export default function Map({ searchParams }) {
 						clickedPoint,
 						resetClickedPoint,
 						transportsData,
+						geolocation,
 					}}
 				/>
 			</MapHeader>

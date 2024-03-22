@@ -52,6 +52,7 @@ export default function Content({
 	clickedPoint,
 	resetClickedPoint,
 	transportsData,
+	geolocation,
 }) {
 	const vers = state.slice(-1)[0],
 		osmFeature = vers && vers.osmFeature
@@ -261,7 +262,8 @@ export default function Content({
 						{hasDestination && (
 							<SetDestination
 								destination={destination}
-								origin={state.depuis.geolocated}
+								geolocation={geolocation}
+								searchParams={searchParams}
 							/>
 						)}
 						{clickedGare ? (

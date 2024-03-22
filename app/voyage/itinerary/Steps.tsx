@@ -4,11 +4,11 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { getArrayIndex } from '@/components/utils/utils'
 
-const defaultItems = [1, 2]
 export default function Steps({ recherche, state }) {
-	const [items, setItems] = useState(defaultItems)
+	const [items, setItems] = useState(state)
 
 	const setSearchParams = useSetSearchParams()
+
 	const setSearching = (index) => setSearchParams({ recherche: index })
 
 	return (
@@ -20,7 +20,7 @@ export default function Steps({ recherche, state }) {
 			<Reorder.Group
 				axis="y"
 				values={items}
-				onReorder={setItems}
+				onReorder={(newItems) => console.log('indigo', newItems)}
 				css={`
 					width: 100%;
 					background: var(--lightestColor);

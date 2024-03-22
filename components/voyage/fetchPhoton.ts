@@ -40,7 +40,7 @@ export const buildPhotonItem = (f) => ({
 	//département fr: f.properties.county,
 })
 
-const debounced = debounce(100, fetchPhoton)
+const debounced = debounce(500, fetchPhoton)
 
 export const extractOsmFeature = (choice) => {
 	if (!choice) return [null, null]

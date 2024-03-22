@@ -2,14 +2,19 @@ import useSetSearchParams from '@/components/useSetSearchParams'
 import Link from 'next/link'
 import Image from 'next/image'
 
-export default function SetDestination({ destination, origin }) {
+export default function SetDestination({
+	destination,
+	geolocation,
+	searchParams,
+}) {
 	const setSearchParams = useSetSearchParams()
 
-	const destinationPart = `${destination.longitude}|${destination.latitude}`
+	//const destinationPart = `${destination.longitude}|${destination.latitude}`
+
 	const search = {
-		allez: origin
-			? `${origin.longitude}|${origin.latitude}->${destinationPart}`
-			: `->${destinationPart}`,
+		allez: geolocation
+			? `Votre position||${geolocation.longitude}|${geolocation.latitude}->${searchParams.allez}`
+			: `->${searchParams.allez}`,
 	}
 
 	const href = setSearchParams(search, true, false)
