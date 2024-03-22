@@ -125,7 +125,8 @@ export const objectMapEntries = (obj, fn, filterBoolean) => {
 	return Object.fromEntries(filteredEntries)
 }
 
-const getRealIndex = (array, index) => (index < 0 ? array.lenth - index : index)
+const getRealIndex = (array, index) =>
+	index < 0 ? array.length + index : index
 
 export const replaceArrayIndex = (
 	array,
@@ -134,6 +135,8 @@ export const replaceArrayIndex = (
 	strategy = 'replace'
 ) => {
 	const realIndex = getRealIndex(array, index)
+
+	if (realIndex < 0) return [value]
 
 	return array.map((v, i) =>
 		i === realIndex ? (strategy === 'merge' ? { ...v, ...value } : value) : v

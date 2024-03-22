@@ -1,4 +1,9 @@
-import { debounce, omit, replaceArrayIndex } from '../utils/utils'
+import {
+	debounce,
+	getArrayIndex,
+	omit,
+	replaceArrayIndex,
+} from '../utils/utils'
 
 function fetchPhoton(v, setState, stepIndex, local, zoom) {
 	return fetch(
@@ -9,12 +14,16 @@ function fetchPhoton(v, setState, stepIndex, local, zoom) {
 		.then((res) => res.json())
 		.then((json) =>
 			setState((state) => {
-				if (v !== state[stepIndex].inputValue) return state
+				if (v !== getArrayIndex(state, stepIndex).inputValue) return state
 				else
-					return replaceArrayIndex(state, stepIndex, {
-						...state[stepIndex],
-						results: json.features.map((f) => buildPhotonItem(f)),
-					})
+					return replaceArrayIndex(
+						state,
+						stepIndex,
+						{
+							results: json.features.map((f) => buildPhotonItem(f)),
+						},
+						'merge'
+					)
 			})
 		)
 }

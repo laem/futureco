@@ -8,6 +8,9 @@ import Logo from '@/public/voyage.svg'
 import Image from 'next/image'
 import { replaceArrayIndex } from '@/components/utils/utils'
 
+/* I'm  not sure of the interest to attache `results` to each state step.
+ * It could be cached across the app. No need to re-query photon for identical
+ * queries too.*/
 export default function PlaceSearch({
 	state,
 	setState,
@@ -29,18 +32,17 @@ export default function PlaceSearch({
 	const onInputChange =
 		(stepIndex = -1, localSearch = false) =>
 		(v) => {
-			const oldState = state[stepIndex]
-			setState(
-				replaceArrayIndex(
-					state,
-					stepIndex,
-					{
-						...(v == null ? { ...oldState, results: null } : oldState),
-						inputValue: v,
-					}
-					//validated: false, // TODO was important or not ? could be stored in each state array entries and calculated ?
-				)
+			const newState = replaceArrayIndex(
+				state,
+				stepIndex,
+				{
+					...(v == null ? { results: null } : {}),
+					inputValue: v,
+				}
+				//validated: false, // TODO was important or not ? could be stored in each state array entries and calculated ?
 			)
+			console.log('indigo newState', newState)
+			setState(newState)
 			if (v?.length > 2) {
 				const hash = window.location.hash,
 					local = hash.split('/').slice(1, 3)
@@ -151,11 +153,11 @@ export default function PlaceSearch({
 									setState(replaceArrayIndex(state, -1, newData))
 
 									console.log('ici', newData)
-									const { osmId, featureType, longitude, latitude } =
+									const { osmId, featureType, longitude, latitude, name } =
 										newData.choice
 									if (osmId && featureType)
 										setSearchParams({
-											allez: `${encodePlace(
+											allez: `${name}|${encodePlace(
 												featureType,
 												osmId
 											)}|${longitude}|${latitude}`,
