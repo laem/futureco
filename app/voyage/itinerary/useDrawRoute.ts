@@ -4,7 +4,6 @@ import { useEffect } from 'react'
  * Draws the walk or cycle route provided by BRouter directly as Geojson
  * */
 export default function useDrawRoute(itineraryMode, map, geojson, id) {
-	console.log('geojson udR', geojson)
 	useEffect(() => {
 		if (
 			!itineraryMode ||

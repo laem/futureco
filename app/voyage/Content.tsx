@@ -33,8 +33,6 @@ export default function Content({
 	setBikeRouteProfile,
 	bikeRouteProfile,
 	clickGare,
-	osmFeature,
-	setOsmFeature,
 	zoneImages,
 	panoramaxImages,
 	resetZoneImages,
@@ -55,6 +53,8 @@ export default function Content({
 	resetClickedPoint,
 	transportsData,
 }) {
+	const vers = state.slice(-1)[0],
+		osmFeature = vers && vers.osmFeature
 	const url = osmFeature?.tags?.website || osmFeature?.tags?.['contact:website']
 	const ogImages = useOgImageFetcher(url),
 		ogImage = ogImages[url],
@@ -71,8 +71,6 @@ export default function Content({
 		if (!introductionRead) setSnap(1)
 	}, [introductionRead, setSnap])
 
-	const choice = state.vers?.choice
-
 	const wikidataPictureUrl = wikidata?.pictureUrl
 	const wikiFeatureImage =
 		!tagImage && // We can't easily detect if tagImage is the same as wiki* image
@@ -88,10 +86,8 @@ export default function Content({
 
 	const { recherche } = searchParams
 
-	const hasFeature = choice || osmFeature
-
 	const hasContent =
-		hasFeature ||
+		osmFeature ||
 		zoneImages ||
 		panoramaxImages ||
 		!clickTipRead ||
@@ -100,14 +96,14 @@ export default function Content({
 
 	const bookmarkable = clickedPoint // later : choice || osmFeature
 
-	const hasDestination = choice || osmFeature || clickedPoint,
+	const hasDestination = osmFeature || clickedPoint,
 		destination = hasDestination && {
 			longitude: hasDestination.longitude,
 			latitude: hasDestination.latitude,
 		}
 
 	const showSearch =
-		recherche != null || !(hasFeature || itinerary.itineraryMode) // at first, on desktop, we kept the search bar considering we have room. But this divergence brings dev complexity
+		recherche != null || !(osmFeature || itinerary.itineraryMode) // at first, on desktop, we kept the search bar considering we have room. But this divergence brings dev complexity
 
 	const minimumQuickSearchZoom = getMinimumQuickSearchZoom(!sideSheet)
 
@@ -139,22 +135,20 @@ export default function Content({
 		<section>
 			{showSearch && (
 				<section>
-					{!choice && (
-						<PlaceSearch
-							{...{
-								state,
-								setState,
-								sideSheet,
-								setSnap,
-								zoom,
-								setSearchParams,
-								searchParams,
-								whichInput: recherche == 0 ? 'depuis' : 'vers',
-								autoFocus: recherche != null,
-								stepIndex: -1,
-							}}
-						/>
-					)}
+					<PlaceSearch
+						{...{
+							state,
+							setState,
+							sideSheet,
+							setSnap,
+							zoom,
+							setSearchParams,
+							searchParams,
+							whichInput: recherche == 0 ? 'depuis' : 'vers',
+							autoFocus: recherche != null,
+							stepIndex: -1,
+						}}
+					/>
 					{/* TODO reuse the name overlay and only that ?
 					wikidataPictureUrl && (
 						<motion.div
@@ -181,7 +175,7 @@ export default function Content({
 						<QuickFeatureSearch
 							{...{
 								searchParams,
-								searchInput: state.vers.inputValue,
+								searchInput: vers?.inputValue,
 								setSnap,
 							}}
 						/>
@@ -221,17 +215,15 @@ export default function Content({
 			) : (
 				hasContent && (
 					<ContentSection>
-						{(choice || osmFeature) && (
+						{osmFeature && (
 							<ModalCloseButton
 								title="Fermer l'encart point d'intéret"
 								onClick={() => {
 									console.log('will yo')
 									setSearchParams({ allez: undefined })
-									setTimeout(() => setOsmFeature(null), 300)
 									setLatLngClicked(null)
 									resetZoneImages()
 									console.log('will set default stat')
-									setState(defaultState)
 									openSheet(false)
 								}}
 							/>

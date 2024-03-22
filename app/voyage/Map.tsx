@@ -6,36 +6,35 @@ import { createPolygon, createSearchBBox } from './createSearchPolygon'
 import { sortGares } from './gares'
 
 import useSetSearchParams from '@/components/useSetSearchParams'
-import { getCategory } from '@/components/voyage/categories'
 import MapButtons from '@/components/voyage/MapButtons'
+import { getCategory } from '@/components/voyage/categories'
 import { goodIconSize } from '@/components/voyage/mapUtils'
+import ModalSwitch from './ModalSwitch'
+import { MapContainer, MapHeader } from './UI'
+import { useZoneImages } from './ZoneImages'
 import useAddMap, { defaultZoom } from './effects/useAddMap'
 import useDrawQuickSearchFeatures from './effects/useDrawQuickSearchFeatures'
 import useImageSearch from './effects/useImageSearch'
 import useItinerary from './itinerary/useItinerary'
 import useItineraryFromUrl from './itinerary/useItineraryFromUrl'
-import ModalSwitch from './ModalSwitch'
 import { disambiguateWayRelation } from './osmRequest'
 import { styles } from './styles/styles'
-import { MapContainer, MapHeader } from './UI'
 import useHoverOnMapFeatures from './useHoverOnMapFeatures'
 import useTerrainControl from './useTerrainControl'
 import { encodePlace } from './utils'
-import { useZoneImages } from './ZoneImages'
 
+import { replaceArrayIndex } from '@/components/utils/utils'
 import CenteredCross from './CenteredCross'
+import MapComponents from './MapComponents'
 import { clickableClasses } from './clickableLayers'
 import useDrawSearchResults from './effects/useDrawSearchResults'
 import useDrawTransport from './effects/useDrawTransport'
+import useDrawTransportsMap from './effects/useDrawTransportsMap'
 import useOsmRequest from './effects/useOsmRequest'
+import useOverpassRequest from './effects/useOverpassRequest'
 import useRightClick from './effects/useRightClick'
 import useSearchLocalTransit from './effects/useSearchLocalTransit'
-import useSetTargetMarkerAndZoom from './effects/useSetTargetMarkerAndZoom'
 import useTransportStopData from './transport/useTransportStopData'
-import useDrawTransportsMap from './effects/useDrawTransportsMap'
-import useOverpassRequest from './effects/useOverpassRequest'
-import MapComponents from './MapComponents'
-import { replaceArrayIndex } from '@/components/utils/utils'
 
 export const defaultState = {
 	depuis: { inputValue: null, choice: false },
@@ -65,7 +64,6 @@ export default function Map({ searchParams }) {
 	const allez = useMemo(() => {
 		return searchParams.allez ? searchParams.allez.split('->') : []
 	}, [searchParams.allez])
-	console.log('bleu state', state)
 	const map = useAddMap(styleUrl, setZoom, setBbox, mapContainerRef, setState)
 
 	const [latLngClicked, setLatLngClicked] = useState(null)
@@ -110,7 +108,6 @@ export default function Map({ searchParams }) {
 
 	useEffect(() => {
 		if (!transportStopData || !transportStopData.routesGeojson) return
-		console.log('debug', transportStopData.routesGeojson)
 
 		setTempStyle('transit')
 
@@ -138,8 +135,6 @@ export default function Map({ searchParams }) {
 		return agencyData && { id: agencyData[0], ...agencyData[1] }
 	}, [agencyId]) // including transportsData provokes a loop : maplibre bbox updated -> transportsData recreated -> etc
 
-	console.log('pink agency', agency)
-
 	useEffect(() => {
 		if (!map || !agency) return
 
@@ -149,7 +144,6 @@ export default function Map({ searchParams }) {
 			[bbox[2], bbox[1]],
 			[bbox[0], bbox[3]],
 		]
-		console.log('pink will fitbounds', mapLibreBBox)
 		map.fitBounds(mapLibreBBox)
 	}, [map, agency])
 
@@ -170,7 +164,8 @@ export default function Map({ searchParams }) {
 		map,
 		itineraryMode,
 		bikeRouteProfile,
-		searchParams
+		searchParams,
+		allez
 	)
 
 	const itinerary = {
@@ -181,7 +176,6 @@ export default function Map({ searchParams }) {
 		routes,
 		date,
 	}
-	console.log('itinerary', itinerary)
 
 	const simpleArrayBbox = useMemo(() => {
 		if (!map) return
@@ -258,16 +252,7 @@ export default function Map({ searchParams }) {
 	useEffect(() => {
 		if (!map) return
 		if (styleKey === prevStyleKey) return
-		console.log(
-			'onload useEffect style hook mapId ',
-			map._mapId,
-			' from ',
-			styleKey,
-			' to ',
-			prevStyleKey
-		)
 
-		console.log('onload should diff', styleKey !== 'base')
 		// diff seems to fail because of a undefined sprite error showed in the
 		// console
 		// hence this diff: false. We're not loosing much
@@ -279,7 +264,6 @@ export default function Map({ searchParams }) {
 	}, [styleUrl, map, styleKey, prevStyleKey])
 
 	const [clickedPoint, resetClickedPoint] = useRightClick(map)
-	console.log('jaune point', clickedPoint)
 
 	// This hook lets the user click on the map to find OSM entities
 	// It also draws a polygon to show the search area for pictures
@@ -325,8 +309,6 @@ export default function Map({ searchParams }) {
 					(f) => f.source === 'maptiler_planet' && allowedLayerProps(f)
 				)
 
-			console.log('rawFeatures', rawFeatures)
-			console.log('filteredFeatures', features)
 			if (!features.length || !features[0].id) {
 				console.log('no features', features)
 				return
@@ -350,12 +332,6 @@ export default function Map({ searchParams }) {
 				console.log('Unknown OSM feature type from OpenMapTiles ID')
 				return
 			}
-			console.log('Clicked features from openmaptiles', {
-				features,
-				id,
-				featureType,
-				openMapTilesId,
-			})
 
 			const [element, realFeatureType] = await disambiguateWayRelation(
 				featureType,

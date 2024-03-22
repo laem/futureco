@@ -22,8 +22,11 @@ export default function useItinerary(
 	map,
 	itineraryMode,
 	bikeRouteProfile,
-	searchParams
+	searchParams,
+	state
 ) {
+	//TODO
+	return [() => null, [], null]
 	const [routes, setRoutes] = useState(null)
 	const date = decodeDate(searchParams.date) || initialDate()
 	const selectedConnection = searchParams.choix
@@ -41,9 +44,9 @@ export default function useItinerary(
 		setRoutes((routes) => ({ ...(routes || {}), [key]: value }))
 	const setSearchParams = useSetSearchParams(),
 		setPoints = useCallback(
-			(newPoints) =>
-				console.log('motis newPoints', serializePoints(newPoints)) ||
-				setSearchParams({ allez: serializePoints(newPoints) }),
+			(newPoints) => null,
+			//console.log('motis newPoints', serializePoints(newPoints)) ||
+			//setSearchParams({ allez: serializePoints(newPoints) }),
 			[setSearchParams]
 		)
 
@@ -62,20 +65,17 @@ export default function useItinerary(
   }
 }
 	 */
-	const allez = searchParams.allez
 	const points = useMemo(() => {
-		const coordinates = allez,
-			rawPoints = coordinates?.split(';').map((el) => el.split('|')) || [],
-			points = rawPoints.map(([lon, lat]) => ({
-				type: 'Feature',
-				geometry: {
-					type: 'Point',
-					coordinates: [+lon, +lat],
-				},
-				properties: {},
-			}))
+		const points = state.map(({ longitude, latitude }) => ({
+			type: 'Feature',
+			geometry: {
+				type: 'Point',
+				coordinates: [+longitude, +latitude],
+			},
+			properties: {},
+		}))
 		return points
-	}, [allez])
+	}, [state])
 
 	const linestrings = useMemo(
 		() => [

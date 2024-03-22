@@ -6,9 +6,6 @@ export default function ClickedPoint({
 	clickedPoint: { latitude, longitude, data },
 	origin,
 }) {
-	console.log('jaune data', data)
-
-	console.log('origin', origin)
 	if (!data)
 		return (
 			<div>

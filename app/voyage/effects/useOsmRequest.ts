@@ -102,5 +102,5 @@ export default function useOsmRequest(allez, state, setState) {
 		}
 
 		asyncStateUpdate()
-	}, [allez, state, setState])
+	}, [allez, setState])
 }

@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
 
 export default function useDrawBookmarks(map) {
-	console.log('cyan')
+	console.log('cyan useDrawBookmarks')
 	const [bookmarks, setBookmarks] = useLocalStorage('bookmarks', [])
 
 	useEffect(() => {
