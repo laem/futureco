@@ -89,7 +89,14 @@
     - hand
   query: '[leisure=sports_centre]'
   icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/sport/gymnasium.svg
-
+- name: fitness
+  category: Sports
+  dictionary:
+    - exercicice
+    - entrainement
+  query: '[fitness_station=*]'
+  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/sport/fitness_station.svg
+  
 - name: plage
   category: Tourisme
   query: '[natural=beach]'
