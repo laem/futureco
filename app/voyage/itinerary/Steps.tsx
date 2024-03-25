@@ -49,7 +49,7 @@ export default function Steps({ state }) {
 							index,
 							step,
 							setSearchParams,
-							beingSearched: step === null,
+							beingSearched: step === null || (!step.key && step.inputValue),
 							state,
 						}}
 					/>

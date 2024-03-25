@@ -103,8 +103,15 @@ export default function Content({
 			latitude: hasDestination.latitude,
 		}
 
-	const showSearch =
-		recherche != null || !(osmFeature || itinerary.itineraryMode) // at first, on desktop, we kept the search bar considering we have room. But this divergence brings dev complexity
+	const showSearch = recherche > -1 || !(osmFeature || itinerary.itineraryMode) // at first, on desktop, we kept the search bar considering we have room. But this divergence brings dev complexity
+
+	console.log(
+		'purple',
+		recherche,
+		showSearch,
+		itinerary.itineraryMode,
+		osmFeature
+	)
 
 	const minimumQuickSearchZoom = getMinimumQuickSearchZoom(!sideSheet)
 

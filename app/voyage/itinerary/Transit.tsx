@@ -15,9 +15,13 @@ export default function Transit({ data, searchParams }) {
 		return <p>Pas de transport en commun trouvé :( </p>
 	if (!data?.connections || !data.connections.length) return null
 
+	console.log('indigo connections', data.connections, data.date)
 	const connections = data.connections.filter(
 		(connection) => connectionStart(connection) > stamp(data.date)
 	)
+
+	if (connections.length < 1)
+		return <p>🫣 Pas de transport en commun à cette heure-ci</p>
 
 	const firstDate = connectionStart(connections[0]) // We assume Motis orders them by start date, when you start to walk. Could also be intersting to query the first end date
 
