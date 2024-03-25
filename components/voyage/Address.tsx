@@ -13,12 +13,7 @@ export const addressKeys = [
 	'contact:street',
 ]
 
-export default function Address({ tags: t, noPrefix }) {
-	const g = (key) => {
-		const value = noPrefix ? t[key] : t[`addr:` + key] || t['contact:' + key]
-		return value || ''
-	}
-
+export default function Address({ tags, noPrefix }) {
 	return (
 		<address
 			css={`
@@ -27,13 +22,19 @@ export default function Address({ tags: t, noPrefix }) {
 				font-style: normal;
 			`}
 		>
-			{buildAddress(g)}
+			{buildAddress(tags, noPrefix)}
 		</address>
 	)
 }
 
-export const buildAddress = (g) => `
-${g('housenumber')} ${g('street')} ${
-	g('postcode') || g('city') || g('state') ? ', ' : ''
-} ${g('postcode')} ${g('city')} ${g('state')}
+export const buildAddress = (t: object, noPrefix) => {
+	const g = (key) => {
+		const value = noPrefix ? t[key] : t[`addr:` + key] || t['contact:' + key]
+		return value || ''
+	}
+
+	return `${g('housenumber')} ${g('street')} ${
+		g('postcode') || g('city') || g('state') ? ', ' : ''
+	} ${g('postcode')} ${g('city')} ${g('state')}
 `
+}

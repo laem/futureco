@@ -65,7 +65,7 @@ export default function useItinerary(
 }
 	 */
 	const points = useMemo(() => {
-		const points = state.map(({ longitude, latitude }) => ({
+		const points = state.filter(Boolean).map(({ longitude, latitude }) => ({
 			type: 'Feature',
 			geometry: {
 				type: 'Point',

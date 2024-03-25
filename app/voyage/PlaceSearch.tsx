@@ -8,6 +8,7 @@ import Logo from '@/public/voyage.svg'
 import Image from 'next/image'
 import { getArrayIndex, replaceArrayIndex } from '@/components/utils/utils'
 import { buildAllezPart, setStatePart } from './SetDestination'
+import { buildAddress } from '@/components/voyage/Address'
 
 const useAutoFocus = () => {
 	const inputRef = useCallback((inputElement) => {
@@ -172,13 +173,15 @@ export default function PlaceSearch({
 									console.log('ici', newData)
 									const { osmId, featureType, longitude, latitude, name } =
 										newData.choice
+
+									const address = buildAddress(newData.choice, true)
 									const isOsmFeature = osmId && featureType
 									setSearchParams({
 										allez: setStatePart(
 											stepIndex,
 											state,
 											buildAllezPart(
-												name,
+												name || address,
 												isOsmFeature ? encodePlace(featureType, osmId) : '',
 												longitude,
 												latitude

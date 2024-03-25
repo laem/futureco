@@ -53,7 +53,7 @@ export default function GeoInputOptions({
 
 const safe = (text) => (text != null ? text : '')
 export const buildLocationText = (item) => {
-	if (item.street) return buildAddress((key) => item[key] || '')
+	if (item.street) return buildAddress(item, true)
 
 	const nameIncludes = (what) => {
 		if (!what) return true
