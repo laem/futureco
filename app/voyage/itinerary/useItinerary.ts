@@ -26,7 +26,6 @@ export default function useItinerary(
 	state
 ) {
 	//TODO
-	return [() => null, [], null]
 	const [routes, setRoutes] = useState(null)
 	const date = decodeDate(searchParams.date) || initialDate()
 	const selectedConnection = searchParams.choix
@@ -76,6 +75,8 @@ export default function useItinerary(
 		}))
 		return points
 	}, [state])
+
+	console.log('cornflowerblue points', points, state)
 
 	const linestrings = useMemo(
 		() => [

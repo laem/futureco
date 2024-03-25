@@ -174,7 +174,7 @@ export default function Map({ searchParams }) {
 		itineraryMode,
 		bikeRouteProfile,
 		searchParams,
-		allez
+		state
 	)
 
 	const itinerary = {

@@ -50,6 +50,7 @@ export default function Steps({ state }) {
 							step,
 							setSearchParams,
 							beingSearched: step === null,
+							state,
 						}}
 					/>
 				))}
@@ -58,7 +59,7 @@ export default function Steps({ state }) {
 	)
 }
 
-const Item = ({ index, step, setSearchParams, beingSearched }) => {
+const Item = ({ index, step, setSearchParams, beingSearched, state }) => {
 	const controls = useDragControls()
 	const [undoValue, setUndoValue] = useState(null)
 	return (
@@ -85,7 +86,7 @@ const Item = ({ index, step, setSearchParams, beingSearched }) => {
 					onClick={() => {
 						step && setUndoValue(step.key)
 						setSearchParams({
-							allez: setStatePart(step.key, state, '?'),
+							allez: setStatePart(step.key, state, ''),
 						})
 					}}
 				>
