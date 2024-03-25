@@ -7,17 +7,6 @@ import { computeMotisTrip } from './motisRequest'
 import useDrawRoute from './useDrawRoute'
 import useFetchDrawBikeParkings from './useFetchDrawBikeParkings'
 
-const serializePoints = (points) => {
-	if (points.length === 0) return undefined
-	const result = points
-		// We don't need full precision, just 5 decimals ~ 1m
-		// https://wiki.openstreetmap.org/wiki/Precision_of_coordinates
-		.map(({ geometry: { coordinates } }) =>
-			coordinates.map((coordinate) => (+coordinate).toFixed(5)).join('|')
-		)
-		.join(';')
-	return result
-}
 export default function useItinerary(
 	map,
 	itineraryMode,
