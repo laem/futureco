@@ -35,6 +35,7 @@ import useOverpassRequest from './effects/useOverpassRequest'
 import useRightClick from './effects/useRightClick'
 import useSearchLocalTransit from './effects/useSearchLocalTransit'
 import useTransportStopData from './transport/useTransportStopData'
+import { buildAllezPart } from './SetDestination'
 
 export const defaultState = {
 	depuis: { inputValue: null, choice: false },
@@ -367,10 +368,12 @@ export default function Map({ searchParams }) {
 				// We store longitude and latitude in order to, in some cases, avoid a
 				// subsequent fetch request on link share
 				setSearchParams({
-					allez: `${element.tags?.name || ''}|${encodePlace(
-						realFeatureType,
-						id
-					)}|${longitude}|${latitude}`,
+					allez: buildAllezPart(
+						element.tags?.name || 'sans nom',
+						encodePlace(realFeatureType, id),
+						longitude,
+						latitude
+					),
 				})
 				console.log('sill set OSMFeature', element)
 				// wait for the searchParam update to proceed

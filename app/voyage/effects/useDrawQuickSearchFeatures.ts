@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 import buildSvgImage from './buildSvgImage'
 import useSetSearchParams from '@/components/useSetSearchParams'
 import { encodePlace } from '../utils'
+import { buildAllezPart } from '../SetDestination'
 
 export default function useDrawQuickSearchFeatures(
 	map,
@@ -169,10 +170,12 @@ export default function useDrawQuickSearchFeatures(
 						typeof tagsRaw === 'string' ? JSON.parse(tagsRaw) : tagsRaw
 
 					setSearchParams({
-						allez: `${encodePlace(
-							properties.featureType,
-							properties.id
-						)}|${longitude}|${latitude}`,
+						allez: buildAllezPart(
+							tags?.name || 'sans nom',
+							encodePlace(properties.featureType, properties.id),
+							longitude,
+							latitude
+						),
 					})
 
 					const osmFeature = { ...properties, tags }

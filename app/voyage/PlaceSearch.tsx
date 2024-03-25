@@ -7,6 +7,7 @@ import { encodePlace } from './utils'
 import Logo from '@/public/voyage.svg'
 import Image from 'next/image'
 import { replaceArrayIndex } from '@/components/utils/utils'
+import { buildAllezPart } from './SetDestination'
 
 /* I'm  not sure of the interest to attache `results` to each state step.
  * It could be cached across the app. No need to re-query photon for identical
@@ -157,10 +158,12 @@ export default function PlaceSearch({
 										newData.choice
 									if (osmId && featureType)
 										setSearchParams({
-											allez: `${name}|${encodePlace(
-												featureType,
-												osmId
-											)}|${longitude}|${latitude}`,
+											allez: buildAllezPart(
+												name,
+												encodePlace(featureType, osmId),
+												longitude,
+												latitude
+											),
 											q: undefined,
 										})
 								},

@@ -2,6 +2,13 @@ import useSetSearchParams from '@/components/useSetSearchParams'
 import Link from 'next/link'
 import Image from 'next/image'
 
+export const buildAllezPart = (name, id, longitude, latitude) => {
+	const part = `${name}|${id || ''}|${longitude.toFixed(4)}|${latitude.toFixed(
+		4
+	)}`
+	return part
+}
+
 export default function SetDestination({
 	destination,
 	geolocation,
@@ -13,7 +20,12 @@ export default function SetDestination({
 
 	const search = {
 		allez: geolocation
-			? `Votre position||${geolocation.longitude}|${geolocation.latitude}->${searchParams.allez}`
+			? `${buildAllezPart(
+					'Votre position',
+					null,
+					geolocation.longitude,
+					geolocation.latitude
+			  )}->${searchParams.allez}`
 			: `->${searchParams.allez}`,
 	}
 
