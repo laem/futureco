@@ -155,11 +155,11 @@ const Dots = () => (
 			flex-wrap: wrap;
 			span {
 				display: block;
-				width: 0.3rem;
-				border-radius: 0.2rem;
-				height: 0.3rem;
-				margin: 0.05rem;
 				background: var(--color);
+				width: 5px;
+				border-radius: 5px;
+				height: 5px;
+				margin: 1px;
 			}
 		`}
 	>
