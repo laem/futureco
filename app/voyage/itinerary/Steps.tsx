@@ -44,7 +44,7 @@ export default function Steps({ state }) {
 			>
 				{steps.map((step, index) => (
 					<Item
-						value={step?.key || index}
+						key={step?.key || index}
 						{...{
 							index,
 							step,
