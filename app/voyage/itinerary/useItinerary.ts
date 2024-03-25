@@ -6,6 +6,7 @@ import { decodeDate, initialDate } from './DateSelector'
 import { computeMotisTrip } from './motisRequest'
 import useDrawRoute from './useDrawRoute'
 import useFetchDrawBikeParkings from './useFetchDrawBikeParkings'
+import { geoSerializeSteps } from './areStepsEqual'
 
 export default function useItinerary(
 	map,
@@ -63,7 +64,7 @@ export default function useItinerary(
 			properties: {},
 		}))
 		return points
-	}, [state])
+	}, [geoSerializeSteps(state)])
 
 	console.log('cornflowerblue points', points, state)
 
