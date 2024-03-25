@@ -30,7 +30,7 @@ export default function Steps({ state }) {
 					padding: 0.2rem 0.3rem;
 					list-style-type: none;
 					li {
-						padding: 0.1rem 0.2rem;
+						padding: 0.3rem 0.4rem;
 						border-bottom: 1px solid var(--lighterColor);
 						background: var(--lightestColor);
 						display: flex;
@@ -79,6 +79,9 @@ const Item = ({ index, step, setSearchParams, beingSearched, state }) => {
 					display: flex;
 					justify-content: start;
 					align-items: center;
+					> span {
+						line-height: 1.2rem;
+					}
 				`}
 			>
 				<Icon text={index === 0 ? 'A' : 'B'} />{' '}
