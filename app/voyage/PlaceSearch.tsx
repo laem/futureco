@@ -2,12 +2,22 @@ import GeoInputOptions from '@/components/conversation/GeoInputOptions'
 import { InputStyle } from '@/components/conversation/UI'
 import css from '@/components/css/convertToJs'
 import fetchPhoton from '@/components/voyage/fetchPhoton'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { encodePlace } from './utils'
 import Logo from '@/public/voyage.svg'
 import Image from 'next/image'
-import { replaceArrayIndex } from '@/components/utils/utils'
-import { buildAllezPart } from './SetDestination'
+import { getArrayIndex, replaceArrayIndex } from '@/components/utils/utils'
+import { buildAllezPart, setStatePart } from './SetDestination'
+
+const useAutoFocus = () => {
+	const inputRef = useCallback((inputElement) => {
+		if (inputElement) {
+			inputElement.focus()
+		}
+	}, [])
+
+	return inputRef
+}
 
 /* I'm  not sure of the interest to attache `results` to each state step.
  * It could be cached across the app. No need to re-query photon for identical
@@ -23,12 +33,17 @@ export default function PlaceSearch({
 	autoFocus = false,
 	stepIndex,
 }) {
-	if (!stepIndex) throw new Error('Step index necessary')
+	if (stepIndex == null) throw new Error('Step index necessary')
 	const [localSearch, setLocalSearch] = useState(true)
 	const urlSearchQuery = searchParams.q
-	const vers = state.slice(-1)[0] || { results: [], inputValue: '' }
-	const value = vers.inputValue
-	console.log('violet', value)
+	const step = getArrayIndex(state, stepIndex) || {
+		results: [],
+		inputValue: '',
+	}
+	const value = step.inputValue
+
+	const autofocusInputRef = useAutoFocus()
+	console.log('cornflowerblue search', stepIndex, state)
 
 	const onInputChange =
 		(stepIndex = -1, localSearch = false) =>
@@ -89,7 +104,7 @@ export default function PlaceSearch({
 					<input
 						type="text"
 						value={value || ''}
-						autoFocus={autoFocus}
+						ref={autoFocus && autofocusInputRef}
 						onClick={(e) => {
 							setSnap(0)
 							e.preventDefault()
@@ -127,9 +142,9 @@ export default function PlaceSearch({
 					)}
 				</InputStyle>
 			</div>
-			{vers.results &&
-				vers.inputValue !== '' &&
-				(!vers.choice || vers.choice.inputValue !== vers.inputValue) && (
+			{step.inputValue !== '' &&
+				(!step.choice || step.choice.inputValue !== step.inputValue) &&
+				(step.results ? (
 					<div
 						css={`
 							ul {
@@ -147,25 +162,30 @@ export default function PlaceSearch({
 					>
 						<GeoInputOptions
 							{...{
-								whichInput: 'vers',
-								data: vers,
+								whichInput: 'vers', // legacy
+								data: step,
 								updateState: (newData) => {
 									setSnap(1)
-									setState(replaceArrayIndex(state, -1, newData))
+									// this is questionable; see first comment in this file
+									setState(replaceArrayIndex(state, stepIndex, newData))
 
 									console.log('ici', newData)
 									const { osmId, featureType, longitude, latitude, name } =
 										newData.choice
-									if (osmId && featureType)
-										setSearchParams({
-											allez: buildAllezPart(
+									const isOsmFeature = osmId && featureType
+									setSearchParams({
+										allez: setStatePart(
+											stepIndex,
+											state,
+											buildAllezPart(
 												name,
-												encodePlace(featureType, osmId),
+												isOsmFeature ? encodePlace(featureType, osmId) : '',
 												longitude,
 												latitude
-											),
-											q: undefined,
-										})
+											)
+										),
+										q: undefined,
+									})
 								},
 							}}
 						/>
@@ -199,7 +219,9 @@ export default function PlaceSearch({
 							<span style={css``}>Rechercher ici</span>
 						</label>
 					</div>
-				)}
+				) : (
+					'Chargement..'
+				))}
 		</div>
 	)
 }

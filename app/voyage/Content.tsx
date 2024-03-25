@@ -85,7 +85,7 @@ export default function Content({
 			? getThumb(osmFeature.tags.wikimedia_commons, 500)
 			: wikidataPictureUrl)
 
-	const { recherche } = searchParams
+	const recherche = state.findIndex((el) => el == null || el.key == null)
 
 	const hasContent =
 		osmFeature ||
@@ -145,9 +145,8 @@ export default function Content({
 							zoom,
 							setSearchParams,
 							searchParams,
-							whichInput: recherche == 0 ? 'depuis' : 'vers',
 							autoFocus: recherche != null,
-							stepIndex: -1,
+							stepIndex: recherche,
 						}}
 					/>
 					{/* TODO reuse the name overlay and only that ?

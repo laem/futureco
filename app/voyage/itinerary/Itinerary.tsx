@@ -17,7 +17,7 @@ export default function Itinerary({
 	return (
 		<ContentSection>
 			<ModalCloseButton title="Fermer l'encart itinéraire" onClick={close} />
-			<Steps recherche={searchParams.recherche} state={state} />
+			<Steps state={state} />
 			{!itinerary.routes ? (
 				<p
 					css={`

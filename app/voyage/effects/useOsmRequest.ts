@@ -11,6 +11,7 @@ export default function useOsmRequest(allez, state, setState) {
 	useEffect(() => {
 		const asyncStateUpdate = async () => {
 			const newPoints = allez.map(async (point) => {
+				if (!point || point === '') return null
 				const [name, osmCode, longitude, latitude] = point.split('|')
 
 				const found = state.find((point) => point.osmCode === osmCode)

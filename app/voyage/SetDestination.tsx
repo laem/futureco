@@ -9,6 +9,19 @@ export const buildAllezPart = (name, id, longitude, latitude) => {
 	return part
 }
 
+export const setStatePart = (
+	key: string | number,
+	state: Array<object>,
+	value: string
+) =>
+	state
+		.map((part, index) =>
+			(typeof key === 'string' ? part.key === key : index === key)
+				? value
+				: part.key
+		)
+		.join('->')
+
 export default function SetDestination({
 	destination,
 	geolocation,

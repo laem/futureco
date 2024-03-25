@@ -1,15 +1,17 @@
 import useSetSearchParams from '@/components/useSetSearchParams'
 import { Reorder, useDragControls } from 'framer-motion'
-import { useState } from 'react'
 import Image from 'next/image'
-import { getArrayIndex } from '@/components/utils/utils'
+import { useState } from 'react'
+import { setStatePart } from '../SetDestination'
 
-export default function Steps({ recherche, state, allez }) {
-	const [steps, setSteps] = useState(state)
+export default function Steps({ state }) {
+	const steps = state
+
+	console.log('cornflowerblue steps', steps, state)
+
+	const setSearching = () => null
 
 	const setSearchParams = useSetSearchParams()
-
-	const setSearching = (index) => setSearchParams({ recherche: index })
 
 	return (
 		<section
@@ -42,12 +44,12 @@ export default function Steps({ recherche, state, allez }) {
 			>
 				{steps.map((step, index) => (
 					<Item
-						key={step.key}
+						value={step?.key || index}
 						{...{
 							index,
 							step,
-							setSearching,
-							beingSearched: recherche == index,
+							setSearchParams,
+							beingSearched: step === null,
 						}}
 					/>
 				))}
@@ -56,11 +58,12 @@ export default function Steps({ recherche, state, allez }) {
 	)
 }
 
-const Item = ({ index, step, setSearching, beingSearched }) => {
+const Item = ({ index, step, setSearchParams, beingSearched }) => {
 	const controls = useDragControls()
+	const [undoValue, setUndoValue] = useState(null)
 	return (
 		<Reorder.Item
-			value={step.key}
+			value={step?.key || index}
 			dragListener={false}
 			dragControls={controls}
 			css={`
@@ -78,15 +81,28 @@ const Item = ({ index, step, setSearching, beingSearched }) => {
 				`}
 			>
 				<Icon text={index === 0 ? 'A' : 'B'} />{' '}
-				<span onClick={() => setSearching(index)}>
+				<span
+					onClick={() => {
+						step && setUndoValue(step.key)
+						setSearchParams({
+							allez: setStatePart(step.key, state, '?'),
+						})
+					}}
+				>
 					{beingSearched
 						? `Choisissez une ${index == 0 ? 'origine' : 'destination'}`
 						: step?.name || 'plop'}
 				</span>
-				{beingSearched && (
+				{undoValue != null && beingSearched && (
 					<span>
 						{' '}
-						<button onClick={() => setSearching(undefined)}>
+						<button
+							onClick={() =>
+								setSearchParams({
+									allez: setStatePart(step.key, state, undoValue),
+								})
+							}
+						>
 							<Image
 								src="/close.svg"
 								width="10"
