@@ -7,6 +7,7 @@ import { computeMotisTrip } from './motisRequest'
 import useDrawRoute from './useDrawRoute'
 import useFetchDrawBikeParkings from './useFetchDrawBikeParkings'
 import { geoSerializeSteps } from './areStepsEqual'
+import { buildAllezPart, removeStatePart } from '../SetDestination'
 
 export default function useItinerary(
 	map,
@@ -31,13 +32,7 @@ export default function useItinerary(
 
 	const updateRoute = (key, value) =>
 		setRoutes((routes) => ({ ...(routes || {}), [key]: value }))
-	const setSearchParams = useSetSearchParams(),
-		setPoints = useCallback(
-			(newPoints) => null,
-			//console.log('motis newPoints', serializePoints(newPoints)) ||
-			//setSearchParams({ allez: serializePoints(newPoints) }),
-			[setSearchParams]
-		)
+	const setSearchParams = useSetSearchParams()
 
 	/*
 	 * {
@@ -54,19 +49,22 @@ export default function useItinerary(
   }
 }
 	 */
+	const serializedPoints = geoSerializeSteps(state)
 	const points = useMemo(() => {
-		const points = state.filter(Boolean).map(({ longitude, latitude }) => ({
-			type: 'Feature',
-			geometry: {
-				type: 'Point',
-				coordinates: [+longitude, +latitude],
-			},
-			properties: {},
-		}))
+		const points = state
+			.filter(Boolean)
+			.map(({ longitude, latitude, key }) => ({
+				type: 'Feature',
+				geometry: {
+					type: 'Point',
+					coordinates: [+longitude, +latitude],
+				},
+				properties: { key },
+			}))
 		return points
-	}, [geoSerializeSteps(state)])
+	}, [serializedPoints])
 
-	console.log('cornflowerblue points', points, state)
+	console.log('cornflowerblue points', points)
 
 	const linestrings = useMemo(
 		() => [
@@ -124,21 +122,14 @@ export default function useItinerary(
 
 			// If a feature was clicked, remove it from the map
 			if (features?.length) {
-				const id = features[0].properties.id
-				setPoints(points.filter((p) => p.properties.id !== id))
+				const key = features[0].properties.key
+				setSearchParams({ allez: removeStatePart(key, state) })
 			} else {
-				const point = {
-					type: 'Feature',
-					geometry: {
-						type: 'Point',
-						coordinates: [e.lngLat.lng, e.lngLat.lat],
-					},
-					properties: {
-						id: String(new Date().getTime()),
-					},
-				}
-
-				setPoints([...points, point])
+				setSearchParams({
+					allez:
+						buildAllezPart('Point', null, e.lngLat.lng, e.lngLat.lat) +
+						points.map((point) => '->' + point.properties.key).join(''),
+				})
 			}
 		}
 		const onMouseMove = (e) => {
@@ -167,7 +158,7 @@ export default function useItinerary(
 			map.off('mousemove', onMouseMove)
 			map.getCanvas().style.cursor = 'pointer'
 		}
-	}, [map, points, setPoints, itineraryMode])
+	}, [map, serializedPoints, setSearchParams, itineraryMode])
 
 	/* Routing requests are made here */
 	useEffect(() => {
@@ -277,7 +268,7 @@ export default function useItinerary(
 		map.removeLayer('measure-lines')
 		map.removeLayer('measure-points')
 		map.removeSource('measure-points')
-	}, [itineraryMode, map, points])
+	}, [itineraryMode, map, serializedPoints])
 
 	/* Not sure it's useful to display the distance in this multimodal new mode
 	const computedDistance = isNaN(rawDistance)
@@ -289,6 +280,6 @@ export default function useItinerary(
 		: Math.round(rawDistance) + ' km'
 
 */
-	const resetItinerary = () => setPoints([])
+	const resetItinerary = () => setSearchParams({ allez: undefined })
 	return [resetItinerary, routes, date]
 }

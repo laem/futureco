@@ -12,6 +12,15 @@ export const buildAllezPart = (name, id, longitude, latitude) => {
 	return part
 }
 
+export const removeStatePart = (key: string | number, state: Array<object>) =>
+	state
+		.map((part, index) =>
+			(typeof key === 'string' ? part.key === key : index === key)
+				? false
+				: part.key
+		)
+		.filter(Boolean)
+		.join('->')
 export const setStatePart = (
 	key: string | number,
 	state: Array<object>,

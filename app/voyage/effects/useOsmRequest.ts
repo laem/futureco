@@ -10,11 +10,14 @@ import { steps } from 'framer-motion'
 export default function useOsmRequest(allez, state, setState) {
 	useEffect(() => {
 		const asyncStateUpdate = async () => {
+			console.log('cornflowerblue allez', allez)
 			const newPoints = allez.map(async (point) => {
 				if (!point || point === '') return null
 				const [name, osmCode, longitude, latitude] = point.split('|')
 
-				const found = state.find((point) => point.osmCode === osmCode)
+				const found = state.find(
+					(point) => osmCode !== '' && point.osmCode === osmCode
+				)
 				if (found) return found // already cached, don't make useless requests
 
 				const [featureType, featureId] = decodePlace(osmCode)
@@ -99,6 +102,7 @@ export default function useOsmRequest(allez, state, setState) {
 				return { osmCode, longitude, latitude, name, osmFeature, key: point }
 			})
 			const newState = await Promise.all(newPoints)
+			console.log('cornflowerblue ns', newState)
 			setState(newState)
 		}
 
