@@ -11,6 +11,9 @@
     - végé
     - vegan
     - végétalien
+    - vege
+    - vegetarien
+    - vegetalien
   query:
     - '["diet:vegetarian"~"yes|only"]'
     - '["diet:vegan"~"yes|only"]'
@@ -99,6 +102,7 @@
   category: Loisirs
   dictionary:
     - terrain de jeu
+    - aire de jeu
   query: '[leisure=playground]'
   icon: playground
 
