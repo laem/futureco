@@ -193,7 +193,7 @@ export const colors = {
 	OUIGO: '#0193c9',
 	TER: '#034EA2',
 }
-function handleColor(rawColor, defaultColor) {
+export function handleColor(rawColor, defaultColor) {
 	if (!rawColor) return defaultColor
 	if (rawColor.startsWith('#')) return rawColor
 	if (rawColor.match(/^([0-9A-Fa-f])+$/) && rawColor.length === 6)

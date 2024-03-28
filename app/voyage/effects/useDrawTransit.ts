@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
-import { useMediaQuery } from 'usehooks-ts'
+import { handleColor } from '../itinerary/motisRequest'
+import { findContrastedTextColor } from '@/components/utils/colors'
 
 export default function useDrawTransit(map, transit, selectedConnection) {
 	const connection =
@@ -13,16 +14,19 @@ export default function useDrawTransit(map, transit, selectedConnection) {
 		console.log('yotr', transports)
 		const featureCollection = {
 			type: 'FeatureCollection',
-			features: transports.reduce(
-				(memo, next) => [
+			features: transports.reduce((memo, next) => {
+				const route_text_color = handleColor(next.route_text_color, '#000000')
+				return [
 					...memo,
 					{
 						type: 'Feature',
 						properties: {
+							name: next.route_short_name,
 							move_type: next.move_type,
 							route_color: next.route_color || '#d3b2ee',
 							route_color_darker: next.route_color_darker || '',
-							route_text_color: next.route_text_color,
+							route_text_color,
+							inverse_color: findContrastedTextColor(route_text_color, true),
 						},
 						geometry: {
 							type: 'LineString',
@@ -31,9 +35,8 @@ export default function useDrawTransit(map, transit, selectedConnection) {
 								.map((stop) => [stop.station.pos.lng, stop.station.pos.lat]),
 						},
 					},
-				],
-				[]
-			),
+				]
+			}, []),
 		}
 		console.log(featureCollection)
 		const id = 'transit-' + Math.random()
@@ -90,6 +93,25 @@ export default function useDrawTransit(map, transit, selectedConnection) {
 					18,
 					12,
 				],
+			},
+		})
+
+		map.addLayer({
+			id: id + '-lines-symbols',
+			type: 'symbol',
+			source: id,
+			layout: {
+				'symbol-placement': 'line',
+				'text-font': ['Open Sans Bold'],
+				'text-field': '{name}', // part 2 of this is how to do it
+				'text-transform': 'uppercase',
+				'text-size': 16,
+			},
+			paint: {
+				'text-color': ['get', 'route_text_color'],
+				'text-halo-blur': 1,
+				'text-halo-color': ['get', 'inverse_color'],
+				'text-halo-width': 1,
 			},
 		})
 		map.addLayer(

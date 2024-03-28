@@ -51,21 +51,25 @@ export default function useItinerary(
 }
 	 */
 	const serializedPoints = geoSerializeSteps(state)
+
+	console.log('indigo geo', serializedPoints)
 	const points = useMemo(() => {
 		const points = state
+			.map((step, index) => {
+				if (step == null) return
+				const { longitude, latitude, key } = step
+				return {
+					type: 'Feature',
+					geometry: {
+						type: 'Point',
+						coordinates: [+longitude, +latitude],
+					},
+					properties: { key, letter: letterFromIndex(index) },
+				}
+			})
 			.filter(Boolean)
-			.map(({ longitude, latitude, key }, index) => ({
-				type: 'Feature',
-				geometry: {
-					type: 'Point',
-					coordinates: [+longitude, +latitude],
-				},
-				properties: { key, letter: letterFromIndex(index) },
-			}))
 		return points
 	}, [serializedPoints])
-
-	console.log('cornflowerblue points', points)
 
 	const linestrings = useMemo(
 		() =>
