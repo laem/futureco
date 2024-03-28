@@ -8,6 +8,7 @@ import useDrawRoute from './useDrawRoute'
 import useFetchDrawBikeParkings from './useFetchDrawBikeParkings'
 import { geoSerializeSteps } from './areStepsEqual'
 import { buildAllezPart, removeStatePart } from '../SetDestination'
+import { letterFromIndex } from './Steps'
 
 export default function useItinerary(
 	map,
@@ -53,13 +54,13 @@ export default function useItinerary(
 	const points = useMemo(() => {
 		const points = state
 			.filter(Boolean)
-			.map(({ longitude, latitude, key }) => ({
+			.map(({ longitude, latitude, key }, index) => ({
 				type: 'Feature',
 				geometry: {
 					type: 'Point',
 					coordinates: [+longitude, +latitude],
 				},
-				properties: { key },
+				properties: { key, letter: letterFromIndex(index) },
 			}))
 		return points
 	}, [serializedPoints])

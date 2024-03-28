@@ -84,7 +84,7 @@ const Item = ({ index, step, setSearchParams, beingSearched, state }) => {
 					}
 				`}
 			>
-				<Icon text={String.fromCharCode(65 + (index % 26))} />{' '}
+				<Icon text={letterFromIndex(index)} />{' '}
 				<span
 					onClick={() => {
 						step && setUndoValue(step.key)
@@ -172,3 +172,5 @@ const Dots = () => (
 		))}
 	</span>
 )
+
+export const letterFromIndex = (index) => String.fromCharCode(65 + (index % 26))

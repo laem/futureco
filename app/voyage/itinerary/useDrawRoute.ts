@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { letterFromIndex } from './Steps'
 
 /*
  * Draws the walk or cycle route provided by BRouter directly as Geojson
@@ -22,65 +23,89 @@ export default function useDrawRoute(itineraryMode, map, geojson, id) {
 
 		if (map) console.log('getsource2', id, map.getSource(id))
 		console.log('useDrawRoute did add source')
+
 		map.addLayer({
-			id: id + 'Contour',
-			type: 'line',
+			id: id + 'PointsSymbols',
+			type: 'symbol',
 			source: id,
-			layout: {
-				'line-join': 'round',
-				'line-cap': 'round',
-			},
-			paint: {
-				walking: {
-					'line-color': '#5B099F',
-					'line-width': 0, // I wasn't able to make a dasharray contour
-				},
-				distance: {
-					'line-width': 2,
-					'line-color': '#185abd60',
-					'line-dasharray': [8, 8],
-				},
-				cycling: {
-					'line-color': '#5B099F',
-					'line-width': 8,
-				},
-			}[id],
-			filter: ['in', '$type', 'LineString'],
-		})
-		map.addLayer({
-			id: id + 'Line',
-			type: 'line',
-			source: id,
-			layout: {
-				'line-join': 'round',
-				'line-cap': 'round',
-			},
-			paint: {
-				walking: {
-					'line-color': '#8f53c1',
-					'line-width': 4,
-					'line-dasharray': [1, 2],
-				},
-				distance: {
-					'line-width': 0,
-				},
-				cycling: {
-					'line-color': '#57bff5',
-					'line-width': 5,
-				},
-			}[id],
-			filter: ['in', '$type', 'LineString'],
-		})
-		map.addLayer({
-			id: id + 'Points',
-			type: 'circle',
-			source: id,
-			paint: {
-				'circle-radius': 6,
-				'circle-color': '#2988e6',
-			},
 			filter: ['in', '$type', 'Point'],
+			layout: {
+				'text-field': ['get', 'letter'],
+				//				'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+				'text-size': 16,
+			},
 		})
+		map.addLayer(
+			{
+				id: id + 'Points',
+				type: 'circle',
+				source: id,
+				paint: {
+					'circle-radius': 12,
+					'circle-color': '#2988e6',
+					'circle-stroke-color': '#0a2e52',
+					'circle-stroke-width': 2,
+				},
+				filter: ['in', '$type', 'Point'],
+			},
+			id + 'PointsSymbols'
+		)
+
+		map.addLayer(
+			{
+				id: id + 'Line',
+				type: 'line',
+				source: id,
+				layout: {
+					'line-join': 'round',
+					'line-cap': 'round',
+				},
+				paint: {
+					walking: {
+						'line-color': '#8f53c1',
+						'line-width': 4,
+						'line-dasharray': [1, 2],
+					},
+					distance: {
+						'line-width': 0,
+					},
+					cycling: {
+						'line-color': '#57bff5',
+						'line-width': 5,
+					},
+				}[id],
+				filter: ['in', '$type', 'LineString'],
+			},
+			'distance' + 'Points'
+		)
+		map.addLayer(
+			{
+				id: id + 'Contour',
+				type: 'line',
+				source: id,
+				layout: {
+					'line-join': 'round',
+					'line-cap': 'round',
+				},
+				paint: {
+					walking: {
+						'line-color': '#5B099F',
+						'line-width': 0, // I wasn't able to make a dasharray contour
+					},
+					distance: {
+						'line-width': 2,
+						'line-color': '#185abd60',
+						'line-dasharray': [8, 8],
+					},
+					cycling: {
+						'line-color': '#5B099F',
+						'line-width': 8,
+					},
+				}[id],
+				filter: ['in', '$type', 'LineString'],
+			},
+			'distance' + 'Line'
+		)
 
 		return () => {
 			// There's something I don't understand in MapLibre's lifecycle...
@@ -97,6 +122,7 @@ export default function useDrawRoute(itineraryMode, map, geojson, id) {
 				map.removeLayer(id + 'Line')
 				map.removeLayer(id + 'Contour')
 				map.removeLayer(id + 'Points')
+				map.removeLayer(id + 'PointsSymbols')
 				map.removeSource(id)
 			} catch (e) {
 				console.log('Could not remove useDrawRoute layers or source', e)
