@@ -127,8 +127,8 @@ export default function useItinerary(
 			} else {
 				setSearchParams({
 					allez:
-						buildAllezPart('Point', null, e.lngLat.lng, e.lngLat.lat) +
-						points.map((point) => '->' + point.properties.key).join(''),
+						points.map((point) => point.properties.key + '->').join('') +
+						buildAllezPart('Point', null, e.lngLat.lng, e.lngLat.lat),
 				})
 			}
 		}
