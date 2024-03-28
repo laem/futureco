@@ -1,10 +1,13 @@
 import { useEffect } from 'react'
 import { letterFromIndex } from './Steps'
+import { useMediaQuery } from 'usehooks-ts'
+import getBbox from '@turf/bbox'
 
 /*
  * Draws the walk or cycle route provided by BRouter directly as Geojson
  * */
 export default function useDrawRoute(itineraryMode, map, geojson, id) {
+	const isMobile = useMediaQuery('(max-width: 800px)')
 	useEffect(() => {
 		if (
 			!itineraryMode ||
@@ -110,6 +113,14 @@ export default function useDrawRoute(itineraryMode, map, geojson, id) {
 			'distance' + 'Line'
 		)
 
+		const bbox = getBbox(geojson)
+
+		map.fitBounds(bbox, {
+			//TODO make it right with mobile snap, this is very basic
+			padding: isMobile
+				? { top: 50, bottom: 400, left: 50, right: 50 }
+				: { top: 100, bottom: 100, left: 600, right: 100 },
+		})
 		return () => {
 			// There's something I don't understand in MapLibre's lifecycle...
 			// "this.style is undefined" when redimensioning the browser window, need

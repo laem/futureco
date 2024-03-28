@@ -21,7 +21,7 @@ export default function Steps({ state }) {
 		>
 			<Reorder.Group
 				axis="y"
-				values={steps.map((step) => step.key)}
+				values={steps.map((step) => step?.key)}
 				onReorder={(newItems) =>
 					setSearchParams({ allez: newItems.join('->') })
 				}

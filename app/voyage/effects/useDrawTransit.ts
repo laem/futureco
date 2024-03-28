@@ -1,12 +1,10 @@
 import { useEffect } from 'react'
-import getBbox from '@turf/bbox'
 import { useMediaQuery } from 'usehooks-ts'
 
 export default function useDrawTransit(map, transit, selectedConnection) {
 	const connection =
 		transit?.connections && transit.connections[selectedConnection || 0]
 
-	const isMobile = useMediaQuery('(max-width: 800px)')
 	useEffect(() => {
 		if (!map || !connection) return
 
@@ -144,15 +142,6 @@ export default function useDrawTransit(map, transit, selectedConnection) {
 					4,
 				],
 			},
-		})
-		const bbox = getBbox(featureCollection)
-
-		console.log('blue will fit bounds')
-		map.fitBounds(bbox, {
-			//TODO make it right with mobile snap, this is very basic
-			padding: isMobile
-				? { top: 50, bottom: 400, left: 50, right: 50 }
-				: { top: 100, bottom: 100, left: 600, right: 100 },
 		})
 
 		return () => {
