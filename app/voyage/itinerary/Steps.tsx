@@ -7,7 +7,7 @@ import { setStatePart } from '../SetDestination'
 export default function Steps({ state }) {
 	const steps = state
 
-	console.log('cornflowerblue steps', steps, state)
+	console.log('indigo reorder', steps)
 
 	const setSearchParams = useSetSearchParams()
 
@@ -21,8 +21,10 @@ export default function Steps({ state }) {
 		>
 			<Reorder.Group
 				axis="y"
-				values={steps}
-				onReorder={(newItems) => console.log('indigo', newItems)}
+				values={steps.map((step) => step.key)}
+				onReorder={(newItems) =>
+					setSearchParams({ allez: newItems.join('->') })
+				}
 				css={`
 					width: 100%;
 					background: var(--lightestColor);
@@ -44,7 +46,7 @@ export default function Steps({ state }) {
 			>
 				{steps.map((step, index) => (
 					<Item
-						key={step?.key || index}
+						key={step?.key}
 						{...{
 							index,
 							step,
@@ -62,9 +64,12 @@ export default function Steps({ state }) {
 const Item = ({ index, step, setSearchParams, beingSearched, state }) => {
 	const controls = useDragControls()
 	const [undoValue, setUndoValue] = useState(null)
+	const key = step?.key
+	console.log('indigo reorder key', key)
 	return (
 		<Reorder.Item
-			value={step?.key || index}
+			key={key}
+			value={key}
 			dragListener={false}
 			dragControls={controls}
 			css={`
