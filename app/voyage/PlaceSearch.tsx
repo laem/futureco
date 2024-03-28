@@ -2,11 +2,27 @@ import GeoInputOptions from '@/components/conversation/GeoInputOptions'
 import { InputStyle } from '@/components/conversation/UI'
 import css from '@/components/css/convertToJs'
 import fetchPhoton from '@/components/voyage/fetchPhoton'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { encodePlace } from './utils'
 import Logo from '@/public/voyage.svg'
 import Image from 'next/image'
+import { getArrayIndex, replaceArrayIndex } from '@/components/utils/utils'
+import { buildAllezPart, setStatePart } from './SetDestination'
+import { buildAddress } from '@/components/voyage/Address'
 
+const useAutoFocus = () => {
+	const inputRef = useCallback((inputElement) => {
+		if (inputElement) {
+			inputElement.focus()
+		}
+	}, [])
+
+	return inputRef
+}
+
+/* I'm  not sure of the interest to attache `results` to each state step.
+ * It could be cached across the app. No need to re-query photon for identical
+ * queries too.*/
 export default function PlaceSearch({
 	state,
 	setState,
@@ -15,33 +31,43 @@ export default function PlaceSearch({
 	zoom,
 	setSearchParams,
 	searchParams,
+	autoFocus = false,
+	stepIndex,
 }) {
+	if (stepIndex == null) throw new Error('Step index necessary')
 	const [localSearch, setLocalSearch] = useState(true)
 	const urlSearchQuery = searchParams.q
-	const { vers } = state
-	const value = vers.inputValue
-	console.log('violet', value)
+	const step = getArrayIndex(state, stepIndex) || {
+		results: [],
+		inputValue: '',
+	}
+	const value = step.inputValue
+
+	const autofocusInputRef = useAutoFocus()
+	console.log('cornflowerblue search', stepIndex, state)
 
 	const onInputChange =
-		(whichInput, localSearch = false) =>
+		(stepIndex = -1, localSearch = false) =>
 		(v) => {
-			const oldState = state[whichInput]
-			setState({
-				...state,
-				[whichInput]: {
-					...(v == null ? { ...oldState, results: null } : oldState),
+			const newState = replaceArrayIndex(
+				state,
+				stepIndex,
+				{
+					...(v == null ? { results: null } : {}),
 					inputValue: v,
-				},
-				validated: false,
-			})
+				}
+				//validated: false, // TODO was important or not ? could be stored in each state array entries and calculated ?
+			)
+			console.log('indigo newState', newState)
+			setState(newState)
 			if (v?.length > 2) {
 				const hash = window.location.hash,
 					local = hash.split('/').slice(1, 3)
 
-				fetchPhoton(v, setState, whichInput, localSearch && local, zoom)
+				fetchPhoton(v, setState, stepIndex, localSearch && local, zoom)
 			}
 		}
-	const onDestinationChange = onInputChange('vers', localSearch)
+	const onDestinationChange = onInputChange(stepIndex, localSearch)
 
 	useEffect(() => {
 		if (!urlSearchQuery || value != null) return
@@ -79,6 +105,7 @@ export default function PlaceSearch({
 					<input
 						type="text"
 						value={value || ''}
+						ref={autoFocus && autofocusInputRef}
 						onClick={(e) => {
 							setSnap(0)
 							e.preventDefault()
@@ -116,10 +143,9 @@ export default function PlaceSearch({
 					)}
 				</InputStyle>
 			</div>
-			{vers.results &&
-				vers.inputValue !== '' &&
-				(!state.vers.choice ||
-					state.vers.choice.inputValue !== vers.inputValue) && (
+			{step.inputValue !== '' &&
+				(!step.choice || step.choice.inputValue !== step.inputValue) &&
+				(step.results ? (
 					<div
 						css={`
 							ul {
@@ -137,19 +163,32 @@ export default function PlaceSearch({
 					>
 						<GeoInputOptions
 							{...{
-								whichInput: 'vers',
-								data: state['vers'],
+								whichInput: 'vers', // legacy
+								data: step,
 								updateState: (newData) => {
 									setSnap(1)
-									setState((state) => ({ ...state, vers: newData }))
+									// this is questionable; see first comment in this file
+									setState(replaceArrayIndex(state, stepIndex, newData))
 
 									console.log('ici', newData)
-									const { osmId, featureType } = newData.choice
-									if (osmId && featureType)
-										setSearchParams({
-											lieu: encodePlace(featureType, osmId),
-											q: undefined,
-										})
+									const { osmId, featureType, longitude, latitude, name } =
+										newData.choice
+
+									const address = buildAddress(newData.choice, true)
+									const isOsmFeature = osmId && featureType
+									setSearchParams({
+										allez: setStatePart(
+											stepIndex,
+											state,
+											buildAllezPart(
+												name || address,
+												isOsmFeature ? encodePlace(featureType, osmId) : '',
+												longitude,
+												latitude
+											)
+										),
+										q: undefined,
+									})
 								},
 							}}
 						/>
@@ -174,13 +213,18 @@ export default function PlaceSearch({
 								defaultChecked={localSearch}
 								onClick={() => {
 									setLocalSearch(!localSearch)
-									onInputChange('vers', !localSearch)(vers.inputValue)
+									onInputChange(
+										stepIndex,
+										!localSearch
+									)(state.slice(-1)[0].inputValue)
 								}}
 							/>
 							<span style={css``}>Rechercher ici</span>
 						</label>
 					</div>
-				)}
+				) : (
+					'Chargement..'
+				))}
 		</div>
 	)
 }

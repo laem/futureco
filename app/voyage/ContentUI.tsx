@@ -18,3 +18,7 @@ export const ExplanationWrapper = styled.div`
 		line-height: 1.4rem;
 	}
 `
+export const ContentSection = styled.section`
+	padding-top: 1.6rem;
+	position: relative;
+`

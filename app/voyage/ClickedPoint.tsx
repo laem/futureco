@@ -4,11 +4,9 @@ import computeDistance from '@turf/distance'
 
 export default function ClickedPoint({
 	clickedPoint: { latitude, longitude, data },
-	origin,
+	geolocation,
 }) {
-	console.log('jaune data', data)
-
-	console.log('origin', origin)
+	const origin = geolocation
 	if (!data)
 		return (
 			<div>

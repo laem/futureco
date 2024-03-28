@@ -53,7 +53,7 @@ export default function GeoInputOptions({
 
 const safe = (text) => (text != null ? text : '')
 export const buildLocationText = (item) => {
-	if (item.street) return buildAddress((key) => item[key] || '')
+	if (item.street) return buildAddress(item, true)
 
 	const nameIncludes = (what) => {
 		if (!what) return true
@@ -93,9 +93,10 @@ const Option = ({
 
 	const locationText = buildLocationText(option)
 	console.log({ locationText })
-	const foundIcon = icons.find(
-		([key]) => key === osmKey + '_' + osmValue || key === osmValue
-	)
+	const foundIcon =
+		icons.find(([key]) => key === osmKey + '_' + osmValue) ||
+		icons.find(([key]) => key === osmValue)
+	console.log('cyan', option, foundIcon)
 	const urlBase = `https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/`
 	const iconPath = foundIcon ? urlBase + foundIcon[1] : `/dot.svg`
 

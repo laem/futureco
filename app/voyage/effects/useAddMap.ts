@@ -2,6 +2,7 @@ import maplibregl from 'maplibre-gl'
 import { useEffect, useState } from 'react'
 import { useMediaQuery } from 'usehooks-ts'
 import { styles } from '../styles/styles'
+import { replaceArrayIndex } from '@/components/utils/utils'
 
 const defaultCenter =
 	// Saint Malo [-1.9890417068124002, 48.66284934737089]
@@ -14,7 +15,7 @@ export default function useAddMap(
 	setZoom,
 	setBbox,
 	mapContainerRef,
-	setState
+	setGeolocation
 ) {
 	const [map, setMap] = useState(null)
 	const mobile = useMediaQuery('(max-width: 800px)')
@@ -49,10 +50,7 @@ export default function useAddMap(
 
 		geolocate.on('geolocate', function (e) {
 			console.log('bleu ', e.coords)
-			setState((state) => ({
-				...state,
-				depuis: { ...state.depuis, geolocated: e.coords },
-			}))
+			setGeolocation((state) => e.coords)
 		})
 
 		newMap.on('style.load', function () {

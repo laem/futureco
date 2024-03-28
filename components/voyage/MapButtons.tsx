@@ -117,6 +117,25 @@ export default function MapButtons({
 				)}
 			</MapButton>
 			<ItineraryButton {...itinerary} />
+			<MapButton>
+				<Link
+					href={setSearchParams(
+						{
+							...omit(['favoris'], searchParams),
+							...(searchParams.favoris ? {} : { favoris: 'oui' }),
+						},
+						true,
+						true
+					)}
+				>
+					<img
+						src={'/star.svg'}
+						css={`
+							filter: none !important;
+						`}
+					/>
+				</Link>
+			</MapButton>
 		</MapButtonsWrapper>
 	)
 }

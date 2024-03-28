@@ -1,4 +1,5 @@
 import { Transport } from './Transit'
+import Image from 'next/image'
 
 export default function BestConnection({ bestConnection }) {
 	console.log('prune best', bestConnection)
@@ -10,18 +11,25 @@ export default function BestConnection({ bestConnection }) {
 				background: white;
 				margin: 0.6rem 0;
 				border: 2px solid gold;
+				padding: 0 0.4rem;
 				display: flex;
 				align-items: center;
-				> div:first-child {
+				> img {
 					margin: 1rem;
-					font-size: 150%;
+					width: 1.8rem;
+					height: auto;
 				}
 				p {
 					line-height: 1.4rem;
 				}
 			`}
 		>
-			<div>⭐️</div>
+			<Image
+				src="/star-full-gold.svg"
+				alt="Icône d'étoile couleur or pour le trajet optimal"
+				width="10"
+				height="10"
+			/>
 			<div>
 				<small>Il y a un trajet optimal</small>
 				<p>

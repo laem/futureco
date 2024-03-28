@@ -495,6 +495,7 @@
 	["level_crossing", "poi_colored/level_crossing.svg"],
 	["railway_yard", "transport/railway_yard.svg"],
 	["railway_platform", "transport/train_station2.svg"],
+	["railway_stop", "transport/train_station2.svg"],
 	["railway_station_disused", "functional-icons/train_station_disused.svg"],
 	["railway_station_small_disused", "undefined/.svg"],
 	[

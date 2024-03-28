@@ -1,31 +1,35 @@
-import { debounce, omit } from '../utils/utils'
+import {
+	debounce,
+	getArrayIndex,
+	omit,
+	replaceArrayIndex,
+} from '../utils/utils'
 
-function fetchPhoton(v, setState, whichInput, local, zoom) {
+function fetchPhoton(v, setState, stepIndex, local, zoom) {
 	return fetch(
 		`https://photon.komoot.io/api/?q=${encodeURIComponent(v)}&limit=30&lang=fr${
 			local ? `&lat=${local[0]}&lon=${local[1]}` : ''
 		}${zoom ? `&zoom=${zoom}` : ''}`
 	)
 		.then((res) => res.json())
-		.then((json) => {
+		.then((json) =>
 			setState((state) => {
-				if (v !== state[whichInput].inputValue) return state
+				if (v !== getArrayIndex(state, stepIndex).inputValue) return state
 				else
-					return {
-						...state,
-						[whichInput]: {
-							...state[whichInput],
-							results: json.features.map((f) => (
-								 buildPhotonItem(f),
-							)),
+					return replaceArrayIndex(
+						state,
+						stepIndex,
+						{
+							results: json.features.map((f) => buildPhotonItem(f)),
 						},
-					}
+						'merge'
+					)
 			})
-		})
+		)
 }
 
 export const buildPhotonItem = (f) => ({
-	...omit(['osm_id', 'osm_type'],f.properties),
+	...omit(['osm_id', 'osm_type'], f.properties),
 	osmId: f.properties.osm_id,
 	featureType:
 		f.properties.osm_type &&
@@ -36,7 +40,7 @@ export const buildPhotonItem = (f) => ({
 	//département fr: f.properties.county,
 })
 
-const debounced = debounce(100, fetchPhoton)
+const debounced = debounce(500, fetchPhoton)
 
 export const extractOsmFeature = (choice) => {
 	if (!choice) return [null, null]
