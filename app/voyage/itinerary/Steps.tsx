@@ -80,11 +80,11 @@ const Item = ({ index, step, setSearchParams, beingSearched, state }) => {
 					justify-content: start;
 					align-items: center;
 					> span {
-						line-height: 1.2rem;
+						line-height: 1.4rem;
 					}
 				`}
 			>
-				<Icon text={index === 0 ? 'A' : 'B'} />{' '}
+				<Icon text={String.fromCharCode(65 + (index % 26))} />{' '}
 				<span
 					onClick={() => {
 						step && setUndoValue(step.key)
