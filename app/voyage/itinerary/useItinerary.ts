@@ -129,7 +129,12 @@ export default function useItinerary(
 				setSearchParams({
 					allez:
 						points.map((point) => point.properties.key + '->').join('') +
-						buildAllezPart('Point', null, e.lngLat.lng, e.lngLat.lat),
+						buildAllezPart(
+							'Point sur la carte',
+							null,
+							e.lngLat.lng,
+							e.lngLat.lat
+						),
 				})
 			}
 		}

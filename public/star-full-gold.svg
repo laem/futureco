@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.0"
+   width="1280pt"
+   height="1280pt"
+   viewBox="0 0 1280 1280"
+   preserveAspectRatio="xMidYMid"
+   id="svg1"
+   sodipodi:docname="star-full-gold.svg"
+   inkscape:version="1.3.1 (9b9bdc1480, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="pt"
+     inkscape:zoom="0.32450407"
+     inkscape:cx="853.61025"
+     inkscape:cy="828.95725"
+     inkscape:window-width="1920"
+     inkscape:window-height="1055"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1"
+     showgrid="false" />
+  <metadata
+     id="metadata1">
+Created by potrace 1.15, written by Peter Selinger 2001-2017
+</metadata>
+  <g
+     transform="matrix(0.1138483,0,0,-0.1138483,-95.701181,1358.299)"
+     fill="#000000"
+     stroke="none"
+     id="g1"
+     style="fill:#ffd700;fill-opacity:1;stroke:none;stroke-width:1000;stroke-dasharray:none;stroke-opacity:1">
+    <path
+       d="m 6373,11410 c -26,-11 -41,-32 -167,-235 -51,-82 -134,-215 -185,-295 -93,-148 -261,-476 -391,-765 -40,-88 -98,-217 -131,-287 -60,-130 -129,-279 -240,-520 -338,-732 -404,-852 -564,-1014 -224,-227 -276,-243 -1525,-464 -344,-61 -726,-129 -850,-151 -409,-72 -637,-119 -874,-178 -432,-109 -457,-122 -434,-206 8,-32 30,-58 137,-170 37,-38 119,-131 184,-207 184,-215 271,-297 553,-525 21,-17 93,-76 160,-130 67,-54 207,-167 311,-251 105,-84 203,-164 219,-177 16,-13 85,-69 154,-125 69,-56 134,-109 145,-118 11,-9 68,-55 125,-102 58,-46 107,-87 110,-90 3,-3 34,-30 70,-59 173,-145 341,-334 413,-468 22,-40 65,-153 72,-190 39,-202 27,-423 -41,-753 -21,-100 -107,-520 -200,-970 -166,-808 -196,-960 -210,-1065 -7,-60 -16,-120 -18,-132 -3,-12 -9,-91 -15,-175 -6,-84 -15,-231 -22,-326 -9,-136 -9,-179 1,-203 29,-70 80,-65 290,29 25,11 113,48 195,83 210,88 536,255 900,461 376,212 1170,654 1315,730 146,78 299,141 405,168 116,30 332,34 440,8 196,-48 411,-141 820,-358 50,-26 171,-89 270,-140 99,-51 212,-109 250,-130 39,-20 133,-70 210,-110 77,-40 163,-86 192,-101 97,-54 488,-247 543,-269 30,-12 78,-31 105,-41 28,-11 127,-42 220,-70 94,-28 232,-73 308,-100 147,-52 180,-58 214,-34 35,24 37,71 13,267 -45,382 -78,576 -220,1313 -39,204 -89,462 -110,575 -21,113 -62,324 -90,470 -191,985 -198,1104 -81,1325 17,33 46,80 63,105 37,52 222,239 322,326 39,32 86,73 105,90 38,32 252,212 361,303 36,29 76,63 90,75 14,11 50,41 80,66 30,25 58,48 61,52 3,5 19,18 36,31 16,12 52,41 79,64 47,40 186,156 229,192 11,9 45,36 75,61 30,24 73,60 95,80 22,19 67,58 99,85 240,204 311,270 637,595 130,129 239,245 242,257 7,30 -13,65 -46,81 -32,16 -492,99 -747,136 -211,30 -487,61 -1490,166 -1002,105 -1123,122 -1284,181 -97,35 -143,65 -219,142 -115,117 -183,241 -662,1217 -658,1338 -668,1358 -944,1835 -73,126 -107,155 -158,135 z"
+       id="path1"
+       style="fill:#ffd700;fill-opacity:1;stroke:none;stroke-width:1000;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+</svg>
