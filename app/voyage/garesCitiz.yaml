@@ -1,0 +1,11 @@
+# Citiz provider id : list of train close train stations
+0087471003:
+  provider: 19
+  cityId: 313
+  website:
+    https://rennesmetropole.citiz.coop
+
+    #Nantes
+#0087481002:
+#provider: 15
+#cityid: ?

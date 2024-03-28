@@ -18,22 +18,23 @@ import ModalSwitch from './ModalSwitch'
 import { disambiguateWayRelation } from './osmRequest'
 import { styles } from './styles/styles'
 import { MapContainer, MapHeader } from './UI'
+import useCars from './useCars'
 import useHoverOnMapFeatures from './useHoverOnMapFeatures'
 import useTerrainControl from './useTerrainControl'
-import { encodePlace } from './utils'
 import { useZoneImages } from './ZoneImages'
 
 import CenteredCross from './CenteredCross'
 import { clickableClasses } from './clickableLayers'
 import useDrawSearchResults from './effects/useDrawSearchResults'
 import useDrawTransport from './effects/useDrawTransport'
+import useDrawTransportsMap from './effects/useDrawTransportsMap'
 import useOsmRequest from './effects/useOsmRequest'
+import useOverpassRequest from './effects/useOverpassRequest'
 import useRightClick from './effects/useRightClick'
 import useSearchLocalTransit from './effects/useSearchLocalTransit'
 import useSetTargetMarkerAndZoom from './effects/useSetTargetMarkerAndZoom'
 import useTransportStopData from './transport/useTransportStopData'
-import useDrawTransportsMap from './effects/useDrawTransportsMap'
-import useOverpassRequest from './effects/useOverpassRequest'
+import { encodePlace } from './utils'
 
 export const defaultState = {
 	depuis: { inputValue: null, choice: false },
@@ -181,6 +182,7 @@ export default function Map({ searchParams }) {
 		date,
 	}
 	console.log('itinerary', itinerary)
+	const cars = useCars(map, clickedGare)
 
 	const simpleArrayBbox = useMemo(() => {
 		if (!map) return
