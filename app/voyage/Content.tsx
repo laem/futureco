@@ -300,7 +300,7 @@ export default function Content({
 						) : clickedPoint ? (
 							<ClickedPoint
 								clickedPoint={clickedPoint}
-								origin={state.depuis.geolocated}
+								geolocation={geolocation}
 							/>
 						) : (
 							!clickTipRead && (

@@ -26,6 +26,7 @@ import { encodePlace } from './utils'
 import { replaceArrayIndex } from '@/components/utils/utils'
 import CenteredCross from './CenteredCross'
 import MapComponents from './MapComponents'
+import { buildAllezPart } from './SetDestination'
 import { clickableClasses } from './clickableLayers'
 import useDrawSearchResults from './effects/useDrawSearchResults'
 import useDrawTransport from './effects/useDrawTransport'
@@ -35,7 +36,6 @@ import useOverpassRequest from './effects/useOverpassRequest'
 import useRightClick from './effects/useRightClick'
 import useSearchLocalTransit from './effects/useSearchLocalTransit'
 import useTransportStopData from './transport/useTransportStopData'
-import { buildAllezPart } from './SetDestination'
 
 export const defaultState = {
 	depuis: { inputValue: null, choice: false },

@@ -114,13 +114,20 @@ export default function useDrawRoute(itineraryMode, map, geojson, id) {
 		)
 
 		const bbox = getBbox(geojson)
+		console.log('indigo geojson', geojson)
 
-		map.fitBounds(bbox, {
-			//TODO make it right with mobile snap, this is very basic
-			padding: isMobile
-				? { top: 50, bottom: 400, left: 50, right: 50 }
-				: { top: 100, bottom: 100, left: 600, right: 100 },
-		})
+		if (
+			geojson.features.filter(
+				(f) => f.geometry.type === 'Point' && f.properties.key != null
+			).length > 1
+		)
+			map.fitBounds(bbox, {
+				//TODO make it right with mobile snap, this is very basic
+				padding: isMobile
+					? { top: 50, bottom: 400, left: 50, right: 50 }
+					: { top: 100, bottom: 100, left: 600, right: 100 },
+			})
+
 		return () => {
 			// There's something I don't understand in MapLibre's lifecycle...
 			// "this.style is undefined" when redimensioning the browser window, need
