@@ -68,19 +68,22 @@ export default function useItinerary(
 	console.log('cornflowerblue points', points)
 
 	const linestrings = useMemo(
-		() => [
-			{
-				type: 'Feature',
-				properties: {},
+		() =>
+			points.length < 1
+				? []
+				: [
+						{
+							type: 'Feature',
+							properties: {},
 
-				geometry: {
-					type: 'LineString',
-					coordinates: points.map((point) => {
-						return point.geometry.coordinates
-					}),
-				},
-			},
-		],
+							geometry: {
+								type: 'LineString',
+								coordinates: points.map((point) => {
+									return point.geometry.coordinates
+								}),
+							},
+						},
+				  ],
 		[points]
 	)
 
