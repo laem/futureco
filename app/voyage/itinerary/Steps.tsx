@@ -9,9 +9,9 @@ export default function Steps({ state }) {
 
 	console.log('cornflowerblue steps', steps, state)
 
-	const setSearching = () => null
-
 	const setSearchParams = useSetSearchParams()
+
+	if (!steps?.length) return null
 
 	return (
 		<section
