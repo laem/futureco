@@ -104,7 +104,8 @@ const ModeContent = ({ mode, data, setBikeRouteProfile, bikeRouteProfile }) => {
 				<strong
 					style={css(
 						`background: ${deniveléColor(
-							déniveléCumulé
+							déniveléCumulé,
+							km
 						)}; padding: 0 .2rem; border-radius: 0.3rem;`
 					)}
 				>
@@ -130,7 +131,10 @@ const ModeContent = ({ mode, data, setBikeRouteProfile, bikeRouteProfile }) => {
 	)
 }
 
-const deniveléColor = (height) =>
+// TODO this function should be made more complex.
+// E.g. tell the user if the ride is mostly flat but has a very hard drop at one
+// point
+const deniveléColor = (height, km) =>
 	height > 600
 		? '#f98080'
 		: height > 300
