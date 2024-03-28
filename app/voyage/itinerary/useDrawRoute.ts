@@ -30,6 +30,7 @@ export default function useDrawRoute(itineraryMode, map, geojson, id) {
 			source: id,
 			filter: ['in', '$type', 'Point'],
 			layout: {
+				//'text-color': '#ffffff', makes the whole drawing fail...
 				'text-field': ['get', 'letter'],
 				//				'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
 				'text-size': 16,
