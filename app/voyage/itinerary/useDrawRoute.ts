@@ -29,8 +29,10 @@ export default function useDrawRoute(itineraryMode, map, geojson, id) {
 			type: 'symbol',
 			source: id,
 			filter: ['in', '$type', 'Point'],
+			paint: {
+				'text-color': '#ffffff', //makes the whole drawing fail...
+			},
 			layout: {
-				//'text-color': '#ffffff', makes the whole drawing fail...
 				'text-field': ['get', 'letter'],
 				//				'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
 				'text-size': 16,
@@ -44,8 +46,8 @@ export default function useDrawRoute(itineraryMode, map, geojson, id) {
 				paint: {
 					'circle-radius': 12,
 					'circle-color': '#2988e6',
-					'circle-stroke-color': '#0a2e52',
-					'circle-stroke-width': 2,
+					'circle-stroke-color': '#ffffff',
+					'circle-stroke-width': 3,
 				},
 				filter: ['in', '$type', 'Point'],
 			},

@@ -94,21 +94,24 @@ export default function useDrawTransit(map, transit, selectedConnection) {
 				],
 			},
 		})
-		map.addLayer({
-			source: id,
-			type: 'line',
-			id: id + '-lines-walking',
-			filter: ['==', ['get', 'move_type'], 'Walk'],
-			layout: {
-				'line-join': 'round',
-				'line-cap': 'round',
+		map.addLayer(
+			{
+				source: id,
+				type: 'line',
+				id: id + '-lines-walking',
+				filter: ['==', ['get', 'move_type'], 'Walk'],
+				layout: {
+					'line-join': 'round',
+					'line-cap': 'round',
+				},
+				paint: {
+					'line-color': '#8f53c1',
+					'line-width': 4,
+					'line-dasharray': [1, 2],
+				},
 			},
-			paint: {
-				'line-color': '#8f53c1',
-				'line-width': 4,
-				'line-dasharray': [1, 2],
-			},
-		})
+			'distancePoints'
+		)
 		map.addLayer({
 			source: id,
 			type: 'circle',
