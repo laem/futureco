@@ -168,6 +168,7 @@ export default function useDrawTransit(map, transit, selectedConnection) {
 
 		return () => {
 			map.removeLayer(id + '-lines')
+			map.removeLayer(id + '-lines-symbols')
 			map.removeLayer(id + '-lines-walking')
 			map.removeLayer(id + '-lines-contour')
 			map.removeLayer(id + '-points')
