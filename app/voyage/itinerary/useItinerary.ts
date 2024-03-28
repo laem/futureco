@@ -223,10 +223,13 @@ export default function useItinerary(
 			return
 		}
 
-		async function fetchTrainRoute(points, itineraryDistance, date) {
+		async function fetchTrainRoute(multiplePoints, itineraryDistance, date) {
 			const minTransitDistance = 0.5 // please walk or bike
 			if (itineraryDistance < minTransitDistance) return null
-			if (points.length > 2) return
+			const points =
+				multiplePoints.length > 2
+					? [multiplePoints[0], multiplePoints.slice(-1)[0]]
+					: multiplePoints
 			const lonLats = points.map(
 				({
 					geometry: {
