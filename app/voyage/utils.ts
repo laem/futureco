@@ -36,13 +36,14 @@ export const computeSncfUicControlDigit = (uic) => {
 	return nextFactorOfTen - sum
 }
 
-export const atOrUrl = (key: string, domain: string) =>
-	key
+export const atOrUrl = (_key: string, domain: string) => {
+	const key = _key.replace(/[^\x20-\x7E]/g, '') // Remove non-ascii characters
+	return key
 		.replace('http://', 'https://')
 		.replace('://www.', '://')
-		.replace(/[^\x00-\x7F]/g, '') // Remove unexpected control characters
 		.startsWith(domain)
 		? key
 		: key.startsWith(domain.split('://')[1])
 			? `https://${key}`
 			: `${domain}/${key}`
+}
