@@ -23,7 +23,7 @@ export default function Brand({ brand, brandWikidata, brandWikipedia }) {
 			<a href={url} target="_blank">
 				{brand}
 			</a>
-			{brandWikidata && <Wikidata key={brandWikidata} />}
+			{brandWikidata && <Wikidata id={brandWikidata} />}
 		</div>
 	)
 }
