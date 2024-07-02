@@ -15,6 +15,7 @@ import { buildAllezPart, setAllezPart } from './SetDestination'
 import { hasStepBeingSearched } from './itinerary/Steps'
 import { encodePlace } from './utils'
 import { close } from '@/components/icons/close'
+import { Loader } from '@/components/loader'
 
 // The idead here was to enable triggering of geoloc with an input. Not
 // exectuted, there is a button now.
@@ -325,46 +326,63 @@ export default function PlaceSearch({
 					<div>
 						{step.results ? (
 							<SearchResultsContainer $sideSheet={sideSheet}>
-								<GeoInputOptions
-									{...{
-										whichInput: 'vers', // legacy
-										data: step,
-										updateState: (newData) => {
-											setSnap(1, 'PlaceSearch')
-											// this is questionable; see first comment in this file
-											const newState = replaceArrayIndex(
-												state,
-												stepIndex,
-												newData
-											)
-											setState(newState)
-											setSearchHistory([
-												value,
-												...searchHistory.filter((entry) => entry !== value),
-											])
-
-											console.log('ici', newData)
-											const { osmId, featureType, longitude, latitude, name } =
-												newData.choice
-
-											const address = buildAddress(newData.choice, true)
-											const isOsmFeature = osmId && featureType
-											setSearchParams({
-												allez: setAllezPart(
+								{step.results.length > 0 ? (
+									<GeoInputOptions
+										{...{
+											whichInput: 'vers', // legacy
+											data: step,
+											updateState: (newData) => {
+												setSnap(1, 'PlaceSearch')
+												// this is questionable; see first comment in this file
+												const newState = replaceArrayIndex(
+													state,
 													stepIndex,
-													newState,
-													buildAllezPart(
-														name || address,
-														isOsmFeature ? encodePlace(featureType, osmId) : '',
-														longitude,
-														latitude
-													)
-												),
-												q: undefined,
-											})
-										},
-									}}
-								/>
+													newData
+												)
+												setState(newState)
+												setSearchHistory([
+													value,
+													...searchHistory.filter((entry) => entry !== value),
+												])
+
+												console.log('ici', newData)
+												const {
+													osmId,
+													featureType,
+													longitude,
+													latitude,
+													name,
+												} = newData.choice
+
+												const address = buildAddress(newData.choice, true)
+												const isOsmFeature = osmId && featureType
+												setSearchParams({
+													allez: setAllezPart(
+														stepIndex,
+														newState,
+														buildAllezPart(
+															name || address,
+															isOsmFeature
+																? encodePlace(featureType, osmId)
+																: '',
+															longitude,
+															latitude
+														)
+													),
+													q: undefined,
+												})
+											},
+										}}
+									/>
+								) : (
+									<div
+										css={`
+											text-align: center;
+										`}
+									>
+										<i>Aucun résultat pour la recherche “{value}”</i>.
+									</div>
+								)}
 								<label
 									css={`
 										text-align: right;
@@ -392,7 +410,7 @@ export default function PlaceSearch({
 											)(state.slice(-1)[0].inputValue)
 										}}
 									/>
-									<span style={css``}>Rechercher ici</span>
+									<span>Rechercher ici</span>
 								</label>
 							</SearchResultsContainer>
 						) : (
@@ -403,7 +421,9 @@ export default function PlaceSearch({
 									margin: 20px 0;
 								`}
 							>
-								<i>Recherche en cours..</i>
+								<Loader>
+									<i>Recherche en cours</i>
+								</Loader>
 							</div>
 						)}
 					</div>

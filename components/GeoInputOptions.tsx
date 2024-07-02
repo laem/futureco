@@ -28,8 +28,7 @@ export default function GeoInputOptions({
 	rulesPath = '',
 	dispatchUpdateSituation = () => () => null,
 }) {
-	console.log('LightSeaGreen DATA', data)
-	return data?.results.length > 0 ? (
+	return (
 		<ul>
 			{removeDuplicates(data.results)
 				.slice(0, 5)
@@ -47,8 +46,6 @@ export default function GeoInputOptions({
 					/>
 				))}
 		</ul>
-	) : (
-		<p>Chargement en cours</p>
 	)
 }
 
